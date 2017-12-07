@@ -1,0 +1,9 @@
+c:\users\rita\documents\visual studio 2015\Projects\TestServer\TestServer\bin\Debug\TestServer.exe.config
+c:\users\rita\documents\visual studio 2015\Projects\TestServer\TestServer\bin\Debug\TestServer.exe
+c:\users\rita\documents\visual studio 2015\Projects\TestServer\TestServer\bin\Debug\TestServer.pdb
+c:\users\rita\documents\visual studio 2015\Projects\TestServer\TestServer\obj\Debug\TestServer.csprojResolveAssemblyReference.cache
+c:\users\rita\documents\visual studio 2015\Projects\TestServer\TestServer\obj\Debug\TestServer.Form1.resources
+c:\users\rita\documents\visual studio 2015\Projects\TestServer\TestServer\obj\Debug\TestServer.Properties.Resources.resources
+c:\users\rita\documents\visual studio 2015\Projects\TestServer\TestServer\obj\Debug\TestServer.csproj.GenerateResource.Cache
+c:\users\rita\documents\visual studio 2015\Projects\TestServer\TestServer\obj\Debug\TestServer.exe
+c:\users\rita\documents\visual studio 2015\Projects\TestServer\TestServer\obj\Debug\TestServer.pdb
