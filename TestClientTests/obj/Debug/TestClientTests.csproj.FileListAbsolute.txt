@@ -1,0 +1,9 @@
+E:\Work2\TestClient\TestClientTests\bin\Debug\TestClientTests.dll
+E:\Work2\TestClient\TestClientTests\bin\Debug\TestClientTests.pdb
+E:\Work2\TestClient\TestClientTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+E:\Work2\TestClient\TestClientTests\bin\Debug\TestClient.exe
+E:\Work2\TestClient\TestClientTests\bin\Debug\TestClient.pdb
+E:\Work2\TestClient\TestClientTests\bin\Debug\zh-Hant\Microsoft.VisualStudio.QualityTools.UnitTestFramework.resources.dll
+E:\Work2\TestClient\TestClientTests\obj\Debug\TestClientTests.csprojResolveAssemblyReference.cache
+E:\Work2\TestClient\TestClientTests\obj\Debug\TestClientTests.dll
+E:\Work2\TestClient\TestClientTests\obj\Debug\TestClientTests.pdb

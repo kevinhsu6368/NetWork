@@ -1,0 +1,18 @@
+c:\users\rita\documents\visual studio 2015\Projects\TestClient\TestClient\bin\Debug\TestClient.exe.config
+c:\users\rita\documents\visual studio 2015\Projects\TestClient\TestClient\bin\Debug\TestClient.exe
+c:\users\rita\documents\visual studio 2015\Projects\TestClient\TestClient\bin\Debug\TestClient.pdb
+c:\users\rita\documents\visual studio 2015\Projects\TestClient\TestClient\obj\Debug\TestClient.csprojResolveAssemblyReference.cache
+c:\users\rita\documents\visual studio 2015\Projects\TestClient\TestClient\obj\Debug\TestClient.Form1.resources
+c:\users\rita\documents\visual studio 2015\Projects\TestClient\TestClient\obj\Debug\TestClient.Properties.Resources.resources
+c:\users\rita\documents\visual studio 2015\Projects\TestClient\TestClient\obj\Debug\TestClient.csproj.GenerateResource.Cache
+c:\users\rita\documents\visual studio 2015\Projects\TestClient\TestClient\obj\Debug\TestClient.exe
+c:\users\rita\documents\visual studio 2015\Projects\TestClient\TestClient\obj\Debug\TestClient.pdb
+E:\Work2\TestClient\TestClient\bin\Debug\TestClient.exe.config
+E:\Work2\TestClient\TestClient\obj\Debug\TestClient.exe
+E:\Work2\TestClient\TestClient\obj\Debug\TestClient.pdb
+E:\Work2\TestClient\TestClient\obj\Debug\TestClient.csprojResolveAssemblyReference.cache
+E:\Work2\TestClient\TestClient\obj\Debug\TestClient.Form1.resources
+E:\Work2\TestClient\TestClient\obj\Debug\TestClient.Properties.Resources.resources
+E:\Work2\TestClient\TestClient\obj\Debug\TestClient.csproj.GenerateResource.Cache
+E:\Work2\TestClient\TestClient\bin\Debug\TestClient.exe
+E:\Work2\TestClient\TestClient\bin\Debug\TestClient.pdb
