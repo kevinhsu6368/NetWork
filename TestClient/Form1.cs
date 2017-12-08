@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using JWNetwork;
 
 namespace TestClient
 {
@@ -19,14 +20,52 @@ namespace TestClient
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            Init();
+        }
 
+        Login login = new Login();
+        
+
+        private void Init()
+        {
+            c.onConnected = OnConnected;
+            c.onDisconnected = OnDisconnected;
+            c.onConnecteTimeout = OnConnecteTimeout;
+
+            // register rpc 
+            c.RegRawEvent(login, 1000 ,login.onRawEvent);
+    
+
+        }
+
+        private void OnDisconnected(string flag)
+        {
+            label_connect_status.Text = "Disconnected";
+        }
+
+        private void OnConnecteTimeout()
+        {
+            label_connect_status.Text = "Connecte Timeout";
+        }
+
+        private void OnConnected()
+        {
+            label_connect_status.Text = "Connected";
         }
 
         AsynchronousClient c = new AsynchronousClient();
 
         private void btn_start_Click(object sender, EventArgs e)
         {
-            c.Start("192.168.1.101",8888);
+            try
+            {
+                c.Start(this.txt_IP.Text, int.Parse(this.txt_Port.Text));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+            }
+            
         }
 
         private void btn_sendMSG_Click(object sender, EventArgs e)
@@ -43,6 +82,13 @@ namespace TestClient
         private void btn_Stop_Click(object sender, EventArgs e)
         {
             
+        }
+
+        private void btn_login_Click(object sender, EventArgs e)
+        {
+            login.Name = txt_login_name.Text;
+            login.Pwd = txt_login_pwd.Text;
+            login.doLogin();
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JWNetwork;
 
 namespace Tests
 {
@@ -24,7 +25,7 @@ namespace Tests
         [TestMethod()]
         public void PacketTest2()
         {
-            Packet p = new Packet(1000,new byte[] {01,02,03,04},Packet.PacketControl.DES3_ECB,5 );
+            Packet p = new Packet(1000,new byte[] {01,02,03,04},PacketControl.DES3_ECB,5 );
             Assert.AreEqual(p.packetLen, actual: (uint)12);
             Assert.AreEqual(p.dataType,0x00);
             Assert.AreEqual(p.dataControl, 0x53);
@@ -41,7 +42,7 @@ namespace Tests
         [TestMethod()]
         public void PacketTest3()
         {
-            Packet p = new Packet(1000, new byte[] { 01, 02, 03, 04 }, Packet.PacketControl.DES_CBC, 800);
+            Packet p = new Packet(1000, new byte[] { 01, 02, 03, 04 }, PacketControl.DES_CBC, 800);
             Assert.AreEqual(p.dataControl, 0x14); // high byte : key index 超過 0xF 將重置為 0x1
         }
     }
