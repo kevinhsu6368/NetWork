@@ -146,6 +146,46 @@ namespace JWNetwork
             Send(p.FullData);
         }
 
+        public void SendString(string msg)
+        {
+            
+        }
+
+        public class JsonRPC
+        {
+            public string functionName;
+        }
+
+        public class LoginData : JsonRPC
+        {
+            public string Name;
+            public string Pwd;
+        }
+   
+
+        public void SendJsonRPC(JsonRPC classObject)
+        {
+            // classObect 2 json strign
+        }
+
+        public void SendRPC(string function, Dictionary<string, string> data)
+        {
+            Dictionary<string,string > loginData = new Dictionary<string, string>();
+            loginData.Add("Name","Kevin");
+            loginData.Add("Pwd", "12345");
+            SendRPC("Login", loginData);
+
+            // {
+            //   "function":"Login" , 
+            //   "Data": 
+            //   [
+            //     "Name":"Kevin",
+            //     "Pwd":"12345"
+            //   ]
+            // 
+            // }
+        }
+
         public void SendPacket(UInt16 msgID, byte[] datas)
         {
             Packet p = new Packet(msgID,datas);
