@@ -10,7 +10,6 @@ c:\users\rita\documents\visual studio 2015\Projects\TestServer\TestServer\obj\De
 E:\Work2\NetWork\TestServer\TestServer\bin\Debug\TestServer.exe.config
 E:\Work2\NetWork\TestServer\TestServer\bin\Debug\TestServer.exe
 E:\Work2\NetWork\TestServer\TestServer\bin\Debug\TestServer.pdb
-E:\Work2\NetWork\TestServer\TestServer\obj\Debug\TestServer.csprojResolveAssemblyReference.cache
 E:\Work2\NetWork\TestServer\TestServer\obj\Debug\TestServer.Form1.resources
 E:\Work2\NetWork\TestServer\TestServer\obj\Debug\TestServer.Properties.Resources.resources
 E:\Work2\NetWork\TestServer\TestServer\obj\Debug\TestServer.csproj.GenerateResource.Cache

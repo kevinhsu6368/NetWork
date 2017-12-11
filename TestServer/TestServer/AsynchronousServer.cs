@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+ 
 
 namespace JWNetwork
 {
@@ -14,14 +16,54 @@ namespace JWNetwork
         private static ManualResetEvent sendDone = new ManualResetEvent(false);
         private static ManualResetEvent receiveDone = new ManualResetEvent(false);
 
+        public bool isRunning = false;
 
-        TcpListener tcpServer = new TcpListener(8888);
+        public int bindPort = 8888;
+        public int acceptSize = 10;
 
+        private TcpListener tcpServer = null;
 
-        public void Start()
+        Queue<byte[]> lsRecvBytes = new Queue<byte[]>();
+
+        Queue<Packet> lsRecvPackets = new Queue<Packet>();
+
+        Thread t_Proc = new Thread(new ParameterizedThreadStart(DoProcRecv));
+
+        private static void DoProcRecv(object obj)
         {
-            tcpServer.Start(10);
+            AsynchronousServer server = (AsynchronousServer) obj;
+            while (server.isRunning)
+            {
+                if (server.lsRecvPackets.Count == 0)
+                    continue;
+
+                try
+                {
+                    Packet p = server.lsRecvPackets.Dequeue();
+                    
+
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Console.WriteLine(ex.Message + "\r\n" + ex.StackTrace);
+                }
+
+
+
+            }
+        }
+
+
+        public void Start(int acceptSize, int bindPort)
+        {
+            this.acceptSize = acceptSize;
+            this.bindPort = bindPort;
+            this.tcpServer = new TcpListener(this.bindPort);
+            tcpServer.Start(this.acceptSize);
             DoBeginAcceptSocket(tcpServer);
+
+            isRunning = true;
+            //t_Proc.Start(this);
         }
 
         public void Stop()
@@ -31,7 +73,18 @@ namespace JWNetwork
                 c.socket.Close();
             }
 
-            tcpServer.Stop();
+            try
+            {
+                tcpServer.Stop();
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+                Console.WriteLine(ex.Message + "\r\n" + ex.StackTrace);
+            }
+            
+
+            isRunning = false;
         }
 
         public Dictionary<UInt16, NetEvent.OnRawEvent> lsRawEvent = new Dictionary<UInt16, NetEvent.OnRawEvent>();
@@ -43,6 +96,10 @@ namespace JWNetwork
         public NetEvent.OnDisconnected onDisconnected = null;
 
         public NetEvent.OnConnecteTimeout onConnecteTimeout = null;
+
+        public NetEvent.OnAcceptClient onAcceptClient = null;
+
+        public NetEvent.OnKillClient onKillClient = null;
 
         public bool RegRawEvent(NetEventBase target, UInt16 msgID, NetEvent.OnRawEvent callFunc)
         {
@@ -136,9 +193,21 @@ namespace JWNetwork
 
         public class Client
         {
+            public static UInt32 count = 0;
+
             public Client(Socket s)
             {
                 this.socket = s;
+                this.playerID = ++count;
+                try
+                {
+                    this.ip = ((IPEndPoint)socket.RemoteEndPoint).Address.ToString();
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+                
             }
 
             public const int buffSize = 1024 * 10;//1024 * 10;
@@ -147,9 +216,17 @@ namespace JWNetwork
             public byte[] recvBuff = new byte[buffSize];
             public StringBuilder sb_recv = new StringBuilder();
 
+            public Queue<byte[]> lsRecvBytes = new Queue<byte[]>();
+
 
             public byte[] sendBuff = new byte[buffSize];
             public StringBuilder sb_send = new StringBuilder();
+
+            public UInt32 playerID = 0;
+
+            public bool isLogin = false;
+
+            public string ip;
 
 
         }
@@ -164,25 +241,36 @@ namespace JWNetwork
 
             // End the operation and display the received data on the
             //console.
-            Socket clientSocket = listener.EndAcceptSocket(ar);
-            Client c = new Client(clientSocket);
-            lsClient.Add(c);
+            try
+            {
 
-            // Process the connection here. (Add the client to a 
-            // server table, read data, etc.)
-            Console.WriteLine("Client connected completed");
 
-            // read
-            clientSocket.BeginReceive(c.recvBuff, 0, Client.buffSize, 0, new AsyncCallback(DoRecvCallback), c);
+                Socket clientSocket = listener.EndAcceptSocket(ar);
+                Client c = new Client(clientSocket);
+                lsClient.Add(c);
+                if (onAcceptClient != null)
+                    onAcceptClient(c);
 
-            // send
-            //clientSocket.BeginSend(c.sendBuff, 0, c.sendBuff.Length, 0, new AsyncCallback(DoSendCallback), c);
+                // Process the connection here. (Add the client to a 
+                // server table, read data, etc.)
+                Console.WriteLine("Client connected completed");
 
-            // Signal the calling thread to continue.
-            clientConnected.Set();
+                // read
+                clientSocket.BeginReceive(c.recvBuff, 0, Client.buffSize, 0, new AsyncCallback(DoRecvCallback), c);
 
-            // next connecter
-            DoBeginAcceptSocket(tcpServer);
+                // send
+                //clientSocket.BeginSend(c.sendBuff, 0, c.sendBuff.Length, 0, new AsyncCallback(DoSendCallback), c);
+
+                // Signal the calling thread to continue.
+                clientConnected.Set();
+
+                // next connecter
+                DoBeginAcceptSocket(tcpServer);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message + "\r\n" + ex.StackTrace);
+            }
         }
 
 
@@ -290,7 +378,9 @@ namespace JWNetwork
                     Console.WriteLine(String.Format("Read {0} byte from socket" +
                                        "data = {1} ", read, strContent));
 
+                    //lsRecvBytes.Enqueue();
                     // parser 
+                    /*
                     byte[] data = bsRead;
                     if (data[5] == 0x00) // raw data
                     {
@@ -325,7 +415,7 @@ namespace JWNetwork
 
 
                     }
-
+                    */
                     c.socket.BeginReceive(c.recvBuff, 0, Client.buffSize, 0,
                                              new AsyncCallback(DoRecvCallback), c);
                 }
@@ -364,8 +454,11 @@ namespace JWNetwork
         {
             c.socket.Shutdown(SocketShutdown.Both);
             c.socket.Close();
+            if (this.onKillClient != null)
+                this.onKillClient(c);
+
             //lsClient.Remove(c);
-            lsWillDeleteClient.Add(c);
+            //lsWillDeleteClient.Add(c);
 
             //this.timer1.Start();
         }

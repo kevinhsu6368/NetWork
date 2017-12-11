@@ -160,6 +160,10 @@ namespace JWNetwork
 
         public delegate void OnSend();
 
+        public delegate void OnAcceptClient(Object client);
+
+        public delegate void OnKillClient(Object client);
+
     }
 
 
@@ -186,17 +190,17 @@ namespace JWNetwork
             
         }
 
-        public void AttachClient(AsynchronousClient client)
+        public void AttachClient(AsynchronousServer client)
         {
-            this.client = client;
+            //this.client = client;
         }
 
         public void Send(UInt16 msgID,byte[] datas)
         {
-            if(client==null)
-                return;
+            //if(client==null)
+            //    return;
 
-            client.SendPacket(msgID,datas);
+            //client.SendPacket(msgID,datas);
         }
 
         

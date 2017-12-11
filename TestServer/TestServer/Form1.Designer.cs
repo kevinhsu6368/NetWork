@@ -38,11 +38,15 @@
             this.btn_SendHex = new System.Windows.Forms.Button();
             this.txt_sendHex = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.lv_clients = new System.Windows.Forms.ListView();
             this.columnHeader_NO = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader_IP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader_ConnectID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btn_responseLogin = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txt_Port = new System.Windows.Forms.TextBox();
+            this.txt_max_count = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btn_start
@@ -126,20 +130,20 @@
             this.timer1.Interval = 3000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // listView1
+            // lv_clients
             // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lv_clients.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader_NO,
             this.columnHeader_IP,
             this.columnHeader_ConnectID});
-            this.listView1.FullRowSelect = true;
-            this.listView1.GridLines = true;
-            this.listView1.Location = new System.Drawing.Point(480, 60);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(320, 206);
-            this.listView1.TabIndex = 5;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
+            this.lv_clients.FullRowSelect = true;
+            this.lv_clients.GridLines = true;
+            this.lv_clients.Location = new System.Drawing.Point(480, 60);
+            this.lv_clients.Name = "lv_clients";
+            this.lv_clients.Size = new System.Drawing.Size(320, 206);
+            this.lv_clients.TabIndex = 5;
+            this.lv_clients.UseCompatibleStateImageBehavior = false;
+            this.lv_clients.View = System.Windows.Forms.View.Details;
             // 
             // columnHeader_NO
             // 
@@ -166,12 +170,52 @@
             this.btn_responseLogin.UseVisualStyleBackColor = true;
             this.btn_responseLogin.Click += new System.EventHandler(this.btn_responseLogin_Click);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(130, 14);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(30, 12);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Port :";
+            // 
+            // txt_Port
+            // 
+            this.txt_Port.Location = new System.Drawing.Point(132, 29);
+            this.txt_Port.Multiline = true;
+            this.txt_Port.Name = "txt_Port";
+            this.txt_Port.Size = new System.Drawing.Size(81, 25);
+            this.txt_Port.TabIndex = 8;
+            this.txt_Port.Text = "8888";
+            // 
+            // txt_max_count
+            // 
+            this.txt_max_count.Location = new System.Drawing.Point(40, 29);
+            this.txt_max_count.Multiline = true;
+            this.txt_max_count.Name = "txt_max_count";
+            this.txt_max_count.Size = new System.Drawing.Size(81, 25);
+            this.txt_max_count.TabIndex = 8;
+            this.txt_max_count.Text = "10";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(38, 14);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(65, 12);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Max Counts:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1007, 503);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.txt_max_count);
+            this.Controls.Add(this.txt_Port);
+            this.Controls.Add(this.lv_clients);
             this.Controls.Add(this.label_recv);
             this.Controls.Add(this.txt_recv);
             this.Controls.Add(this.txt_sendHex);
@@ -200,11 +244,15 @@
         private System.Windows.Forms.Button btn_SendHex;
         private System.Windows.Forms.TextBox txt_sendHex;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView lv_clients;
         private System.Windows.Forms.ColumnHeader columnHeader_NO;
         private System.Windows.Forms.ColumnHeader columnHeader_IP;
         private System.Windows.Forms.ColumnHeader columnHeader_ConnectID;
         private System.Windows.Forms.Button btn_responseLogin;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox txt_Port;
+        private System.Windows.Forms.TextBox txt_max_count;
+        private System.Windows.Forms.Label label1;
     }
 }
 

@@ -19,16 +19,46 @@ namespace TestServer
         public Form1()
         {
             InitializeComponent();
+            Form.CheckForIllegalCrossThreadCalls = false;
         }
 
         private AsynchronousServer server = new AsynchronousServer();
 
         private void btn_start_Click(object sender, EventArgs e)
         {
-            server.Start();
-
+            server.Start(int.Parse(txt_max_count.Text),int.Parse(txt_Port.Text));
+            server.onAcceptClient = OnAcceptClient;
+            server.onKillClient = OnKillClient;
         }
 
+        private void OnKillClient(object client)
+        {
+            foreach (ListViewItem v in lv_clients.Items)
+            {
+                if(v.Tag == client)
+                    lv_clients.Items.Remove(v);
+            }
+            UpdateLsClientNO();
+        }
+
+        private void OnAcceptClient(object client)
+        {
+            AsynchronousServer.Client c = (AsynchronousServer.Client) client;
+            ListViewItem lvItem = new ListViewItem(new string[] {"---",c.ip,"---"});
+            lvItem.Tag = c;
+
+            this.lv_clients.Items.Add(lvItem);
+
+            UpdateLsClientNO();
+        }
+
+        public void UpdateLsClientNO()
+        {
+            for (int i = 0; i < this.lv_clients.Items.Count; i++)
+            {
+                this.lv_clients.Items[i].Text = (i + 1).ToString();
+            }
+        }
 
 
         private void btn_Stop_Click(object sender, EventArgs e)
@@ -43,6 +73,8 @@ namespace TestServer
             server.SendMsgToAll(txt);
  
         }
+
+
 
         private void btn_SendHex_Click(object sender, EventArgs e)
         {
