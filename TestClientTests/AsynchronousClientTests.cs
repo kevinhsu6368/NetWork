@@ -25,11 +25,11 @@ namespace Tests
             AsynchronousClient c = new AsynchronousClient();
 
             Login login = new Login("kevin", "123");
-            c.RegRawEvent(1000, login.onRawEvent);
+            c.RegRawEvent(login,1000, login.onRawEvent);
             Assert.AreEqual(1, c.lsRawEvent.Count);
 
             Login login2 = new Login("test", "555");
-            c.RegRawEvent(2000, login2.onRawEvent);
+            c.RegRawEvent(login,2000, login2.onRawEvent);
             Assert.AreEqual(2, c.lsRawEvent.Count);
             //c.lsRawEvent.Count
         }

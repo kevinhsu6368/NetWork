@@ -70,8 +70,18 @@ namespace JWNetwork
         {
             foreach (Client c in lsClient)
             {
-                c.socket.Close();
+                try
+                {
+                    c.socket.Shutdown(SocketShutdown.Both);
+                    c.socket.Close();
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+
             }
+            lsClient.Clear();
 
             try
             {
@@ -202,6 +212,7 @@ namespace JWNetwork
                 try
                 {
                     this.ip = ((IPEndPoint)socket.RemoteEndPoint).Address.ToString();
+                    this.connectID = ((IPEndPoint) socket.RemoteEndPoint).Port;
                 }
                 catch (Exception ex)
                 {
@@ -227,6 +238,8 @@ namespace JWNetwork
             public bool isLogin = false;
 
             public string ip;
+
+            public int connectID;
 
 
         }
@@ -362,8 +375,8 @@ namespace JWNetwork
             {
                 if (c.socket.Connected == false)
                     return;
-
-                int read = c.socket.EndReceive(ar);
+                SocketError errCode;
+                int read = c.socket.EndReceive(ar,out errCode);
 
                 if (read > 0)
                 {
@@ -421,6 +434,7 @@ namespace JWNetwork
                 }
                 else
                 {
+                    /*
                     if (c.sb_recv.Length > 1)
                     {
                         //All of the data has been read, so displays it to the console
@@ -429,7 +443,9 @@ namespace JWNetwork
                         Console.WriteLine(String.Format("Read {0} byte from socket" +
                                            "data = {1} ", strContent.Length, strContent));
                     }
+                    */
                     //c.socket.Close();
+                    DeleteClient(c);
                 }
 
                 // parser 

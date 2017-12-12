@@ -50,7 +50,7 @@ namespace TestClient
         public override void OnRPCEvent(string functionName, Dictionary<string, string> datas)
         {
             base.OnRPCEvent(functionName, datas);
-
+       
         }
 
         public override void OnRawEvent(ushort msgID, byte[] datas)

@@ -199,7 +199,15 @@ namespace JWNetwork
             client.SendPacket(msgID,datas);
         }
 
-        
+        public void Send(string functionName, Dictionary<string,string> data)
+        {
+            if (client == null)
+                return;
+
+            
+        }
+
+
 
     }
 

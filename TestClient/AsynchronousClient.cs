@@ -34,6 +34,8 @@ namespace JWNetwork
         // The port number for the remote device.  
         private const int port = 11000;
 
+        private const int TIMEOUT = 1000*1;
+
         // ManualResetEvent instances signal completion.  
         private static ManualResetEvent connectDone =
             new ManualResetEvent(false);
@@ -53,7 +55,7 @@ namespace JWNetwork
             // Connect to a remote device.  
             try
             {
-                if (client != null)
+                if (client != null && client.Connected)
                     return;
 
                 // Establish the remote endpoint for the socket.  
@@ -71,7 +73,11 @@ namespace JWNetwork
                 // Connect to the remote endpoint.  
                 client.BeginConnect(remoteEP,
                     new AsyncCallback(ConnectCallback), client);
-                connectDone.WaitOne();
+
+                if (connectDone.WaitOne(TIMEOUT))
+                {
+                    
+                }
 
                 /*
             // Send test data to the remote device.  
@@ -198,10 +204,18 @@ namespace JWNetwork
             SendPacket(p);
         }
 
-         
 
 
 
+        public void Stop()
+        {
+            this.client.Shutdown(SocketShutdown.Both);
+            this.client.Close();
+            this.client.Dispose();
+            this.client = null;
+            if (this.onDisconnected != null)
+                this.onDisconnected("Success");
+        }
 
 
 
@@ -221,6 +235,9 @@ namespace JWNetwork
 
                 // Signal that the connection has been made.  
                 connectDone.Set();
+
+                if (this.onConnected != null)
+                    this.onConnected();
             }
             catch (Exception e)
             {

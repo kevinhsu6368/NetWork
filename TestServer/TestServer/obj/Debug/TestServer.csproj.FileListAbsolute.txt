@@ -15,3 +15,4 @@ E:\Work2\NetWork\TestServer\TestServer\obj\Debug\TestServer.Properties.Resources
 E:\Work2\NetWork\TestServer\TestServer\obj\Debug\TestServer.csproj.GenerateResource.Cache
 E:\Work2\NetWork\TestServer\TestServer\obj\Debug\TestServer.exe
 E:\Work2\NetWork\TestServer\TestServer\obj\Debug\TestServer.pdb
+E:\Work2\NetWork\TestServer\TestServer\obj\Debug\TestServer.csprojResolveAssemblyReference.cache

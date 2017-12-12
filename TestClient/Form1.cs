@@ -20,6 +20,7 @@ namespace TestClient
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            Form.CheckForIllegalCrossThreadCalls = false;
             Init();
         }
 
@@ -34,13 +35,16 @@ namespace TestClient
 
             // register rpc 
             c.RegRawEvent(login, 1000 ,login.onRawEvent);
-    
+            c.RegRawEvent(login, 2000, login.onRawEvent);
+
 
         }
 
         private void OnDisconnected(string flag)
         {
             label_connect_status.Text = "Disconnected";
+            this.btn_Stop.Enabled = false ;
+            this.btn_start.Enabled = true ;
         }
 
         private void OnConnecteTimeout()
@@ -51,6 +55,9 @@ namespace TestClient
         private void OnConnected()
         {
             label_connect_status.Text = "Connected";
+            this.btn_Stop.Enabled = true;
+            this.btn_start.Enabled = false;
+
         }
 
         AsynchronousClient c = new AsynchronousClient();
@@ -81,7 +88,7 @@ namespace TestClient
 
         private void btn_Stop_Click(object sender, EventArgs e)
         {
-            
+            c.Stop();
         }
 
         private void btn_login_Click(object sender, EventArgs e)
@@ -89,6 +96,11 @@ namespace TestClient
             login.Name = txt_login_name.Text;
             login.Pwd = txt_login_pwd.Text;
             login.doLogin();
+        }
+
+        private void btn_regist_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
