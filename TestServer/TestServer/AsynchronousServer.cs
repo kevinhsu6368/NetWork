@@ -12,6 +12,23 @@ namespace JWNetwork
 {
     public class AsynchronousServer
     {
+        public class ClientPacket
+        {
+            private ClientPacket()
+            {
+                
+            }
+
+            public ClientPacket(Client c, byte[] data)
+            {
+                this.c = c;
+                this.data = new byte[data.Length];
+                Array.Copy(data, 0,this.data, 0, data.Length);
+            }
+            public Client c;
+            public byte[] data;
+        }
+
         public static ManualResetEvent clientConnected = new ManualResetEvent(false);
         private static ManualResetEvent sendDone = new ManualResetEvent(false);
         private static ManualResetEvent receiveDone = new ManualResetEvent(false);
@@ -25,22 +42,60 @@ namespace JWNetwork
 
         Queue<byte[]> lsRecvBytes = new Queue<byte[]>();
 
-        Queue<Packet> lsRecvPackets = new Queue<Packet>();
+        Queue<ClientPacket> lsRecvClientPackets = new Queue<ClientPacket>();
 
-        Thread t_Proc = new Thread(new ParameterizedThreadStart(DoProcRecv));
+        Thread t_ProcRecv = new Thread(new ParameterizedThreadStart(DoProcRecv));
 
         private static void DoProcRecv(object obj)
         {
             AsynchronousServer server = (AsynchronousServer) obj;
             while (server.isRunning)
             {
-                if (server.lsRecvPackets.Count == 0)
+                if (server.lsRecvClientPackets.Count == 0)
                     continue;
 
                 try
                 {
-                    Packet p = server.lsRecvPackets.Dequeue();
-                    
+                    ClientPacket p = server.lsRecvClientPackets.Dequeue();
+                    Client c = p.c;
+                    if (server.packetType == PacketType.Data) // json-utf8
+                    {
+                        string json = Encoding.UTF8.GetString(p.data);
+                        Console.WriteLine(json);
+
+                        // parser json 
+                        string[] lsLines = json.Replace("\r\n", "\n").Replace("\n","").Split(',');
+                        string function = "";
+                        Dictionary<string,string> data = new Dictionary<string, string>();
+                        foreach (var line in lsLines)
+                        {
+                            string[] ss = line.Replace("\"","").Split(':');
+                            if (ss.Length != 2)
+                                continue;
+                            string key = ss[0].Trim(new [] {' ','\t'});
+                            string value = ss[1].Trim(new[] { ' ', '\t' ,','});
+                            if (key == "Function")
+                            {
+                                function = value;
+                            }
+                            else
+                            { 
+                                data.Add(key,value);
+                            }
+                        }
+
+                        NetEvent.OnRPCEvent callBack = server.lsRPCEvent[function];
+                        if (callBack != null)
+                            callBack(function, data);
+
+      
+
+                    }
+                    else if (server.packetType == PacketType.HeaderAndData)
+                    {
+                        
+                    }
+
 
                 }
                 catch (InvalidOperationException ex)
@@ -53,6 +108,10 @@ namespace JWNetwork
             }
         }
 
+        /// 封包樣式
+        /// </summary>
+        public PacketType packetType = PacketType.Data;
+
 
         public void Start(int acceptSize, int bindPort)
         {
@@ -63,7 +122,7 @@ namespace JWNetwork
             DoBeginAcceptSocket(tcpServer);
 
             isRunning = true;
-            //t_Proc.Start(this);
+            t_ProcRecv.Start(this);
         }
 
         public void Stop()
@@ -125,12 +184,12 @@ namespace JWNetwork
             return true;
         }
 
-        public bool RegRPCEvent(string funcName, NetEvent.OnRPCEvent callFunc)
+        public bool RegRPCEvent(NetEventBase target, string funcName, NetEvent.OnRPCEvent callFunc)
         {
             try
             {
-                lsRPCEvent.Add(funcName + "1", callFunc);
-                lsRPCEvent.Add(funcName + "2", callFunc);
+                target.server = this;
+                lsRPCEvent.Add(funcName , callFunc);
             }
             catch (Exception ex)
             {
@@ -390,6 +449,9 @@ namespace JWNetwork
 
                     Console.WriteLine(String.Format("Read {0} byte from socket" +
                                        "data = {1} ", read, strContent));
+
+                    ClientPacket cp = new ClientPacket(c, bsRead);
+                    this.lsRecvClientPackets.Enqueue(cp);
 
                     //lsRecvBytes.Enqueue();
                     // parser 

@@ -20,7 +20,16 @@ namespace TestServer
         {
             InitializeComponent();
             Form.CheckForIllegalCrossThreadCalls = false;
+            Init();
+
         }
+
+        void Init()
+        {
+            server.RegRPCEvent(login, "C2S_Login", login.OnRPCEvent);
+        }
+
+        ProcLogin login = new ProcLogin();
 
         private AsynchronousServer server = new AsynchronousServer();
 

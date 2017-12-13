@@ -19,6 +19,23 @@ namespace JWNetwork
         DES3_CBC = 6
     }
 
+    /// <summary>
+    /// 封包樣式
+    /// </summary>
+    public enum PacketType
+    {
+        /// <summary>
+        /// 封包有 Header 及 Data
+        /// </summary>
+        HeaderAndData,
+
+        /// <summary>
+        /// 封包只有 Data 的部份
+        /// Send 
+        /// </summary>
+        Data
+    }
+
     public class Packet
     {
 
@@ -112,7 +129,47 @@ namespace JWNetwork
 
         public Packet(string functionName, Dictionary<string, string> datas, byte control)
         {
+            // {
+            //   "function":"Login" , 
+            //   "Data": 
+            //   [
+            //     "Name":"Kevin",
+            //     "Pwd":"12345"
+            //   ]
+            // 
+            // }
+
+            this.dataType = 0x01;
+            this.dataControl = control;
+
+
+            string jsonStart = "{\r\n" +
+                               "  \"Function\":\"" + functionName + "\",\r\n";
+
+            string jsonData = "";
+            int index = 1;
+            foreach (var v in datas)
+            {
+                string next = (index == datas.Count && datas.Count != 1) ? "\r\n" : ",\r\n";
+          
+
+                    jsonData += string.Format("  \"{0}\":\"{1}\"{2}", v.Key, v.Value, next);
+
+                index++;
+            }
+
+            string jsonEnd = "}";
+
+            string str = jsonStart + jsonData + jsonEnd;
+            byte[] bsJsonData = Encoding.UTF8.GetBytes(str);
+
+            this.bsData = new byte[bsJsonData.Length];
+            
+            Array.Copy(bsJsonData, 0, this.bsData, 0, bsJsonData.Length);
+
             Update();
+
+
         }
 
 
@@ -204,7 +261,8 @@ namespace JWNetwork
             if (client == null)
                 return;
 
-            
+           client.SendRPC(functionName,data);
+
         }
 
 

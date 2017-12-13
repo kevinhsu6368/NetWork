@@ -19,6 +19,23 @@ namespace JWNetwork
         DES3_CBC = 6
     }
 
+    /// <summary>
+    /// 封包樣式
+    /// </summary>
+    public enum PacketType
+    {
+        /// <summary>
+        /// 封包有 Header 及 Data
+        /// </summary>
+        HeaderAndData,
+
+        /// <summary>
+        /// 封包只有 Data 的部份
+        /// Send 
+        /// </summary>
+        Data
+    }
+
     public class Packet
     {
 

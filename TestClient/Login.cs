@@ -10,46 +10,66 @@ namespace TestClient
     public class Login : NetEventBase
     {
 
-        public const UInt16 MSGID_LOGIN = 1000;
-        public const UInt16 MSGID_Regist = 1001;
+        //public const UInt16 MSGID_LOGIN = 1000;
+        //public const UInt16 MSGID_Regist = 1001;
 
         public Login()
         {
             //onLogin = OnRawEvent;
         }
 
-        public Login(string name, string pwd)
+        public Login(string account, string pwd)
         {
-            this.Name = name;
-            this.Pwd = pwd;
+            this.Account = account;
+            this.Password = pwd;
         }
 
         //private NetEvent.OnRawEvent onLogin ;
-        
-        
 
-        public string Name;
-        public string Pwd;
+
+        #region C2S
+        public string Account;
+        public string Password;
         public string Email;
+        #endregion
+
+        #region S2C
+
+        public string PlayID;
+        public string Photo;
+        public string ErrorCord;
+        public string GameServer;
+
+        #endregion
 
         public void doLogin()
         {
-            string str = Name + "^" + Pwd;
-            byte[] bs = Encoding.UTF8.GetBytes(str);
-            Send(MSGID_LOGIN, bs);
+            Dictionary<string, string> data = new Dictionary<string, string>();
+            data.Add("Account", Account);
+            data.Add("CheckPassword", "true");
+            data.Add("Password", Password);
+
+            Send("C2S_Login",data);
         }
 
 
         public void doRegister()
         {
-            string str = Name + "^" + Pwd + "^" + Email;
-            byte[] bs = Encoding.UTF8.GetBytes(str);
-            Send(MSGID_LOGIN, bs);
+
         }
 
         public override void OnRPCEvent(string functionName, Dictionary<string, string> datas)
         {
-            base.OnRPCEvent(functionName, datas);
+            switch (functionName)
+            {
+                case "S2C_Login":
+                {
+                    
+                }
+                    break;
+                default:
+                    break;
+            }
        
         }
 

@@ -29,6 +29,8 @@ namespace JWNetwork
         public StringBuilder sb = new StringBuilder();
     }
 
+    
+
     public class AsynchronousClient
     {
         // The port number for the remote device.  
@@ -50,6 +52,80 @@ namespace JWNetwork
         private String response = String.Empty;
         private Socket client = null;
 
+        /// <summary>
+        /// 封包樣式
+        /// </summary>
+        public PacketType packetType = PacketType.Data;
+
+        Queue<byte[]> lsRecvBytes = new Queue<byte[]>();
+
+        Thread t_ProcRecv = new Thread(new ParameterizedThreadStart(DoProcRecv));
+
+        private bool isRunning = true;
+
+        private static void DoProcRecv(object obj)
+        {
+            AsynchronousClient client = (AsynchronousClient)obj;
+            while (client != null && client.isRunning)
+            {
+                Thread.Sleep(10);
+                if (client.lsRecvBytes.Count == 0)
+                    continue;
+
+                try
+                {
+                    byte [] p = client.lsRecvBytes.Dequeue();
+             
+                    if (client.packetType == PacketType.Data) // json-utf8
+                    {
+                        string json = Encoding.UTF8.GetString(p);
+                        Console.WriteLine(json);
+
+                        // parser json 
+                        string[] lsLines = json.Replace("\r\n", "\n").Split('\n');
+                        string function = "";
+                        Dictionary<string, string> data = new Dictionary<string, string>();
+                        foreach (var line in lsLines)
+                        {
+                            string[] ss = line.Replace("\"", "").Split(':');
+                            if (ss.Length != 2)
+                                continue;
+                            string key = ss[0].Trim(new[] { ' ', '\t' });
+                            string value = ss[1].Trim(new[] { ' ', '\t', ',' });
+                            if (key == "Function")
+                            {
+                                function = value;
+                            }
+                            else
+                            {
+                                data.Add(key, value);
+                            }
+                        }
+
+                        NetEvent.OnRPCEvent callBack = client.lsRPCEvent[function];
+                        if (callBack != null)
+                            callBack(function, data);
+
+
+
+                    }
+                    else if (client.packetType == PacketType.HeaderAndData)
+                    {
+
+                    }
+
+
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Console.WriteLine(ex.Message + "\r\n" + ex.StackTrace);
+                }
+
+
+
+            }
+        }
+
         public void Start(String ip, int port)
         {
             // Connect to a remote device.  
@@ -57,6 +133,8 @@ namespace JWNetwork
             {
                 if (client != null && client.Connected)
                     return;
+
+                
 
                 // Establish the remote endpoint for the socket.  
                 // The name of the   
@@ -133,12 +211,12 @@ namespace JWNetwork
             return true;
         }
 
-        public bool RegRPCEvent(string funcName, NetEvent.OnRPCEvent callFunc)
+        public bool RegRPCEvent(NetEventBase target, string funcName, NetEvent.OnRPCEvent callFunc)
         {
             try
             {
-                lsRPCEvent.Add(funcName + "1", callFunc);
-                lsRPCEvent.Add(funcName + "2", callFunc);
+                target.client = this;
+                lsRPCEvent.Add(funcName , callFunc);
             }
             catch (Exception ex)
             {
@@ -149,12 +227,25 @@ namespace JWNetwork
 
         public void SendPacket(Packet p)
         {
-            Send(p.FullData);
+            if (this.packetType == PacketType.Data)
+            {
+                Send(p.bsData);
+            }
+            else if (this.packetType == PacketType.HeaderAndData)
+            {
+                Send(p.FullData);
+            }
+            
         }
 
+        /// <summary>
+        /// 發送不帶封包頭的純文字封包
+        /// </summary>
+        /// <param name="msg"></param>
         public void SendString(string msg)
         {
-            
+            byte[] bsData = Encoding.UTF8.GetBytes(msg);
+            Send(bsData);
         }
 
         public class JsonRPC
@@ -174,22 +265,22 @@ namespace JWNetwork
             // classObect 2 json strign
         }
 
+        /// <summary>
+        /// 發送 RPC - JSON(utf8) 字串封包
+        /// </summary>
+        /// <param name="function"></param>
+        /// <param name="data"></param>
         public void SendRPC(string function, Dictionary<string, string> data)
         {
-            Dictionary<string,string > loginData = new Dictionary<string, string>();
-            loginData.Add("Name","Kevin");
-            loginData.Add("Pwd", "12345");
-            SendRPC("Login", loginData);
+            //Dictionary<string,string > loginData = new Dictionary<string, string>();
+            //loginData.Add("Name","Kevin");
+            //loginData.Add("Pwd", "12345");
+            //SendRPC("Login", loginData);
 
-            // {
-            //   "function":"Login" , 
-            //   "Data": 
-            //   [
-            //     "Name":"Kevin",
-            //     "Pwd":"12345"
-            //   ]
-            // 
-            // }
+            
+            Packet p = new Packet(function,data,0x00);
+            SendPacket(p);
+
         }
 
         public void SendPacket(UInt16 msgID, byte[] datas)
@@ -229,6 +320,8 @@ namespace JWNetwork
 
                 // Complete the connection.  
                 client.EndConnect(ar);
+
+                t_ProcRecv.Start(this);
 
                 Console.WriteLine("Socket connected to {0}",
                     client.RemoteEndPoint.ToString());
@@ -332,6 +425,8 @@ namespace JWNetwork
                 Console.WriteLine(e.ToString());
             }
         }
+
+  
 
         public void Send(string msg)
         {

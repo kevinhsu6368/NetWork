@@ -6,6 +6,26 @@ using System.Text;
 using System.Threading.Tasks;
 using JWNetwork;
 
+namespace JWNetwork.Tests
+{
+    [TestClass()]
+    public class PacketTests
+    {
+        [TestMethod()]
+        public void RPCJson_PacketTest()
+        {
+            Dictionary<string, string> datas = new Dictionary<string, string>();
+            datas.Add("Account", "Kevin");
+            datas.Add("CheckPassword", "true");
+            datas.Add("Password", "SDB");
+            Packet p = new Packet("C2S_Login", datas, 0x00);
+            byte[] bs = p.bsData;
+            string json = Encoding.UTF8.GetString(bs);
+
+        }
+    }
+}
+
 namespace Tests
 {
     [TestClass()]
@@ -45,5 +65,7 @@ namespace Tests
             Packet p = new Packet(1000, new byte[] { 01, 02, 03, 04 }, PacketControl.DES_CBC, 800);
             Assert.AreEqual(p.dataControl, 0x14); // high byte : key index 超過 0xF 將重置為 0x1
         }
+
+         
     }
 }

@@ -34,8 +34,8 @@ namespace TestClient
             c.onConnecteTimeout = OnConnecteTimeout;
 
             // register rpc 
-            c.RegRawEvent(login, 1000 ,login.onRawEvent);
-            c.RegRawEvent(login, 2000, login.onRawEvent);
+
+            c.RegRPCEvent(login,"S2C_Login", login.OnRPCEvent);
 
 
         }
@@ -93,8 +93,8 @@ namespace TestClient
 
         private void btn_login_Click(object sender, EventArgs e)
         {
-            login.Name = txt_login_name.Text;
-            login.Pwd = txt_login_pwd.Text;
+            login.Account = txt_login_name.Text;
+            login.Password = txt_login_pwd.Text;
             login.doLogin();
         }
 

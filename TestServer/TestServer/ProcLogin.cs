@@ -18,6 +18,30 @@ namespace TestServer
             base.OnRawEvent(msgID, datas);
         }
 
+        public override void OnRPCEvent(string functionName, Dictionary<string, string> datas)
+        {
+            switch (functionName)
+            {
+                case "C2S_Login":
+                {
+                    // query db 
+                    string Account = datas["Account"];
+                    string CheckPassword = datas["CheckPassword"];
+                    string Password = datas["Password"];
+
+                    // verify
+                    if (Account != "Kevin" && Password != "123")
+                    {
+                        
+                    }
+                }
+                    break;
+                default:
+                    break;
+
+            }
+        }
+
 
         public void DoResponse()
         {
