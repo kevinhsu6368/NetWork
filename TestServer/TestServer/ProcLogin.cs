@@ -13,28 +13,35 @@ namespace TestServer
             
         }
 
-        public override void OnRawEvent(ushort msgID, byte[] datas)
+        public override void OnRawEvent(AsynchronousServer.Client client, ushort msgID, byte[] datas)
         {
-            base.OnRawEvent(msgID, datas);
+            base.OnRawEvent(client,msgID, datas);
         }
 
-        public override void OnRPCEvent(string functionName, Dictionary<string, string> datas)
+        public override void OnRPCEvent(AsynchronousServer.Client client,string functionName, Dictionary<string, string> datas)
         {
             switch (functionName)
             {
                 case "C2S_Login":
-                {
-                    // query db 
-                    string Account = datas["Account"];
-                    string CheckPassword = datas["CheckPassword"];
-                    string Password = datas["Password"];
-
-                    // verify
-                    if (Account != "Kevin" && Password != "123")
                     {
-                        
+                        // query db 
+                        string Account = datas["Account"];
+                        string CheckPassword = datas["CheckPassword"];
+                        string Password = datas["Password"];
+
+                        // verify
+                        if (Account == "Kevin" && Password == "123")
+                        {
+                            Dictionary<string, string> data = new Dictionary<string, string>();
+                            data.Add("ErrorCode", "0");
+                            data.Add("GameServer", "192.168.1.101:8800");
+                            this.Send(client,"S2C_Login", data);
+                        }
+                        else
+                        {
+
+                        }
                     }
-                }
                     break;
                 default:
                     break;

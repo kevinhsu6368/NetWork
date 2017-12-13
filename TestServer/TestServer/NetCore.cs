@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
@@ -129,6 +130,44 @@ namespace JWNetwork
 
         public Packet(string functionName, Dictionary<string, string> datas, byte control)
         {
+            // {
+            //   "function":"Login" , 
+            //   "Data": 
+            //   [
+            //     "Name":"Kevin",
+            //     "Pwd":"12345"
+            //   ]
+            // 
+            // }
+
+            this.dataType = 0x01;
+            this.dataControl = control;
+
+
+            string jsonStart = "{\r\n" +
+                               "  \"Function\":\"" + functionName + "\",\r\n";
+
+            string jsonData = "";
+            int index = 1;
+            foreach (var v in datas)
+            {
+                string next = (index == datas.Count && datas.Count != 1) ? "\r\n" : ",\r\n";
+
+
+                jsonData += string.Format("  \"{0}\":\"{1}\"{2}", v.Key, v.Value, next);
+
+                index++;
+            }
+
+            string jsonEnd = "}";
+
+            string str = jsonStart + jsonData + jsonEnd;
+            byte[] bsJsonData = Encoding.UTF8.GetBytes(str);
+
+            this.bsData = new byte[bsJsonData.Length];
+
+            Array.Copy(bsJsonData, 0, this.bsData, 0, bsJsonData.Length);
+
             Update();
         }
 
@@ -163,9 +202,10 @@ namespace JWNetwork
 
         }
 
-        public delegate void OnRawEvent(UInt16 msgID, byte[] datas);
+        public delegate void OnRawEvent(AsynchronousServer.Client client, UInt16 msgID, byte[] datas);
 
-        public delegate void OnRPCEvent(string functionName, Dictionary<string, string> datas);
+        public delegate void OnRPCEvent(AsynchronousServer.Client client,string functionName, Dictionary<string, string> datas);
+        
 
         public delegate void OnConnected();
 
@@ -193,34 +233,48 @@ namespace JWNetwork
         }
 
         public AsynchronousServer server;
+        public AsynchronousServer.Client client;
         public NetEvent.OnRawEvent onRawEvent;
         public NetEvent.OnRPCEvent onRpcEvent;
 
-        public virtual void OnRPCEvent(string functionName, Dictionary<string, string> datas)
+        public virtual void OnRPCEvent(AsynchronousServer.Client client, string functionName, Dictionary<string, string> datas)
         {
             
         }
 
 
-        public virtual void OnRawEvent(ushort msgID, byte[] datas)
+        public virtual void OnRawEvent(AsynchronousServer.Client client, ushort msgID, byte[] datas)
         {
             
         }
 
-        public void AttachClient(AsynchronousServer client)
+        public void AttachClient(AsynchronousServer server,AsynchronousServer.Client client)
         {
+            this.server = server;
+            this.client = client;
             //this.client = client;
         }
 
         public void Send(UInt16 msgID,byte[] datas)
         {
-            //if(client==null)
-            //    return;
+            if (server == null)
+                return;
 
-            //client.SendPacket(msgID,datas);
+            server.Send(this.client, datas);
+        }
+
+
+        public void Send(AsynchronousServer.Client client , string functionName, Dictionary<string, string> data)
+        {
+            if (server == null)
+                return;
+
+            server.SendRPC(client,functionName, data);
+
         }
 
         
+
 
     }
 

@@ -306,6 +306,7 @@ namespace JWNetwork
             this.client = null;
             if (this.onDisconnected != null)
                 this.onDisconnected("Success");
+            this.isRunning = false;
         }
 
 
@@ -320,6 +321,7 @@ namespace JWNetwork
 
                 // Complete the connection.  
                 client.EndConnect(ar);
+                
 
                 t_ProcRecv.Start(this);
 
@@ -331,6 +333,8 @@ namespace JWNetwork
 
                 if (this.onConnected != null)
                     this.onConnected();
+
+                Receive(client); // start recv 
             }
             catch (Exception e)
             {
@@ -373,6 +377,13 @@ namespace JWNetwork
                     // There might be more data, so store the data received so far.  
                     state.sb.Append(Encoding.Unicode.GetString(state.buffer, 0, bytesRead));
 
+                    byte[] bsRead = new byte[bytesRead];
+                    Array.Copy(state.buffer,0, bsRead,0, bytesRead);
+                  
+                    this.lsRecvBytes.Enqueue(bsRead);
+
+                    //Console.WriteLine("Read Raw Data = " + StringTools.Bin2Hex(bsRead));
+
                     // Get the rest of the data.  
                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                         new AsyncCallback(ReceiveCallback), state);
@@ -393,6 +404,8 @@ namespace JWNetwork
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                if (this.onDisconnected != null)
+                    this.onDisconnected("Disconnected");
             }
         }
 

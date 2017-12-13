@@ -72,8 +72,8 @@ namespace JWNetwork
                             string[] ss = line.Replace("\"","").Split(':');
                             if (ss.Length != 2)
                                 continue;
-                            string key = ss[0].Trim(new [] {' ','\t'});
-                            string value = ss[1].Trim(new[] { ' ', '\t' ,','});
+                            string key = ss[0].Trim(new [] {' ','\t','{','}'});
+                            string value = ss[1].Trim(new[] { ' ', '\t' ,',','{','}'});
                             if (key == "Function")
                             {
                                 function = value;
@@ -86,7 +86,7 @@ namespace JWNetwork
 
                         NetEvent.OnRPCEvent callBack = server.lsRPCEvent[function];
                         if (callBack != null)
-                            callBack(function, data);
+                            callBack(c,function, data);
 
       
 
@@ -189,6 +189,7 @@ namespace JWNetwork
             try
             {
                 target.server = this;
+                
                 lsRPCEvent.Add(funcName , callFunc);
             }
             catch (Exception ex)
@@ -200,7 +201,15 @@ namespace JWNetwork
 
         public void SendPacket(Client c,Packet p)
         {
-            Send(c,p.FullData);
+            //Send(c,p.FullData);
+            if (this.packetType == PacketType.Data)
+            {
+                Send(c,p.bsData);
+            }
+            else if (this.packetType == PacketType.HeaderAndData)
+            {
+                Send(c,p.FullData);
+            }
         }
 
         public void SendPacket(Client c, UInt16 msgID, byte[] datas)
@@ -213,6 +222,24 @@ namespace JWNetwork
         {
             Packet p = new Packet(msgID, datas, control, keyIndex);
             SendPacket(c,p);
+        }
+
+        /// <summary>
+        /// 發送 RPC - JSON(utf8) 字串封包
+        /// </summary>
+        /// <param name="function"></param>
+        /// <param name="data"></param>
+        public void SendRPC(Client c,string function, Dictionary<string, string> data)
+        {
+            //Dictionary<string,string > loginData = new Dictionary<string, string>();
+            //loginData.Add("Name","Kevin");
+            //loginData.Add("Pwd", "12345");
+            //SendRPC("Login", loginData);
+
+
+            Packet p = new Packet(function, data, 0x00);
+            SendPacket(c,p);
+
         }
 
         public void DeleteClients()
