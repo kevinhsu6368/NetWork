@@ -1,0 +1,55 @@
+﻿Login Server -> 註冊
+{
+   "Function":"C2S_Registered",
+   "FirstName":"",
+   "LastName":"",
+   "MicknName":"",
+   "Password":"",
+   "Birthday":"",
+   "email":"",
+   "location":"",
+   "Gender":"",
+   "Photo":"(hextostring)"
+}
+{
+	"Function":"S2C_Registered ",
+	"PlayID":"0",
+	"ErrorCord":"00000000"
+	"GaneServer":"127.0.0.1:0"
+}
+先檢查C2S_Registered email 是否存在於DB
+[DB存在 回傳ErrorCode ????????]
+[DB不存在 產生PlayID 建立GaneServer(ip/port) 將所有資料與C2S_Registered 寫入DB]
+------------------------------------------------------------------------------
+Login Server -> 登入
+{
+	"Function":"C2S_Login", 
+	"Account":"SDB@gmail.com",
+	"CheckPassword":"true"
+	"Password":"SDB"
+}
+{
+	"Function":"S2C_Login",
+	"PlayID":"0",
+    "Photo":"(hextostring)",
+	"ErrorCord":"00000000",
+	"GaneServer":"127.0.0.1:0"
+} 
+先檢查C2S_Login CheckPassword 是否[true/false]
+[true: 以Account, Password為搜尋DB條件 回傳 PlayID, Photo, GaneServer ]
+[false: 以Account為搜尋DB條件 回傳 PlayID, Photo, GaneServer]
+------------------------------------------------------------------------------
+Login Server -> 忘記密碼
+{
+	"Function":"C2S_ForgetPassword", 
+	"Account":"SDB@gmail.com"
+}
+{
+	"Function":"S2C_ForgetPassword",
+	"ErrorCord":"00000000"
+} 
+先檢查C2S_ForgetPassword email 是否存在於DB
+[DB不存在 回傳ErrorCode ????????]
+[DB存在 將Password欄位以隨機八位數寫入後 發Email通知遊戲玩家新密碼
+------------------------------------------------------------------------------
+==============================================================================
