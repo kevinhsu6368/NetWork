@@ -342,7 +342,8 @@ namespace JWNetwork
             //console.
             try
             {
-
+                if (!listener.Server.Connected)
+                    return;
 
                 Socket clientSocket = listener.EndAcceptSocket(ar);
                 Client c = new Client(clientSocket);
@@ -562,7 +563,7 @@ namespace JWNetwork
             if (this.onKillClient != null)
                 this.onKillClient(c);
 
-            //lsClient.Remove(c);
+            lsClient.Remove(c);
             //lsWillDeleteClient.Add(c);
 
             //this.timer1.Start();

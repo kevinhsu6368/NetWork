@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+//using System.Threading.Tasks;
 using System.Windows.Forms;
 using JWNetwork;
 
@@ -25,6 +25,7 @@ namespace TestClient
         }
 
         Login login = new Login();
+        ForgetPassword forget = new ForgetPassword();
         
 
         private void Init()
@@ -32,12 +33,23 @@ namespace TestClient
             c.onConnected = OnConnected;
             c.onDisconnected = OnDisconnected;
             c.onConnecteTimeout = OnConnecteTimeout;
+            
 
             // register rpc 
 
-            c.RegRPCEvent(login,"S2C_Login", login.OnRPCEvent);
+            //c.RegRPCEvent(login,"S2C_Login", login.OnRPCEvent);
+            c.RegRPCEvent(login, "C2S_Login", "S2C_Login");
+            login.onLoginResult = OnLoginResult;
+
+            c.RegRPCEvent(forget, "C2S_ForgetPassword", "S2C_ForgetPassword");
+            forget.onS2CResult = s => { this.label_forget.Text = s; };
 
 
+        }
+
+        private void OnLoginResult(string s)
+        {
+            this.label_login_status.Text = s;
         }
 
         private void OnDisconnected(string flag)
@@ -95,12 +107,23 @@ namespace TestClient
         {
             login.Account = txt_login_name.Text;
             login.Password = txt_login_pwd.Text;
-            login.doLogin();
+            this.label_login_status.Text = "";
+
+            login.MakeC2SData();
+            login.ExecuteC2SEvent(true);
+            //login.doLogin();
         }
 
         private void btn_regist_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btn_forget_Click(object sender, EventArgs e)
+        {
+            forget.Account = txt_forget_password.Text;
+            forget.MakeC2SData();
+            forget.ExecuteC2SEvent(true);
         }
     }
 }

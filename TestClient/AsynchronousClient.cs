@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Policy;
 using System.Windows.Forms.Layout;
+using LitJson;
 
 
 namespace JWNetwork
@@ -36,7 +37,7 @@ namespace JWNetwork
         // The port number for the remote device.  
         private const int port = 11000;
 
-        private const int TIMEOUT = 1000*1;
+        private const int TIMEOUT = 1000*10;
 
         // ManualResetEvent instances signal completion.  
         private static ManualResetEvent connectDone =
@@ -59,9 +60,11 @@ namespace JWNetwork
 
         Queue<byte[]> lsRecvBytes = new Queue<byte[]>();
 
-        Thread t_ProcRecv = new Thread(new ParameterizedThreadStart(DoProcRecv));
+        private Thread t_ProcRecv;
 
-        private bool isRunning = true;
+        private bool isRunning = false;
+
+ 
 
         private static void DoProcRecv(object obj)
         {
@@ -82,8 +85,24 @@ namespace JWNetwork
                         Console.WriteLine(json);
 
                         // parser json 
+
+                        JsonData jObj = JsonMapper.ToObject(json);
+                        
+
                         string[] lsLines = json.Replace("\r\n", "\n").Split('\n');
-                        string function = "";
+                        string function = jObj["Function"].ToString();
+                        Dictionary<string, string> data = new Dictionary<string, string>();
+                        foreach (KeyValuePair<string, JsonData> v in jObj)
+                        {
+                            if(v.Key == "Function")
+                                continue;
+
+                            string key = v.Key;
+                            string value = v.Value.IsString ? v.Value.ToString() : ""; // 先轉一層
+                            data.Add(key, value);
+                        }
+
+                        /*
                         Dictionary<string, string> data = new Dictionary<string, string>();
                         foreach (var line in lsLines)
                         {
@@ -101,6 +120,7 @@ namespace JWNetwork
                                 data.Add(key, value);
                             }
                         }
+                        */
 
                         NetEvent.OnRPCEvent callBack = client.lsRPCEvent[function];
                         if (callBack != null)
@@ -120,9 +140,6 @@ namespace JWNetwork
                 {
                     Console.WriteLine(ex.Message + "\r\n" + ex.StackTrace);
                 }
-
-
-
             }
         }
 
@@ -154,7 +171,8 @@ namespace JWNetwork
 
                 if (connectDone.WaitOne(TIMEOUT))
                 {
-                    
+                    //if (this.onConnecteTimeout != null)
+                    //    this.onConnecteTimeout();
                 }
 
                 /*
@@ -224,6 +242,23 @@ namespace JWNetwork
             }
             return true;
         }
+
+        public bool RegRPCEvent(NetEventBase target, string c2s_funcName,string s2c_funcName)
+        {
+            try
+            {
+                target.client = this;
+                target.c2s_functionName = c2s_funcName;
+                target.s2c_functionName = s2c_funcName;
+                lsRPCEvent.Add(s2c_funcName, target.onRpcEvent);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
+
 
         public void SendPacket(Packet p)
         {
@@ -300,17 +335,33 @@ namespace JWNetwork
 
         public void Stop()
         {
-            this.client.Shutdown(SocketShutdown.Both);
-            this.client.Close();
-            this.client.Dispose();
-            this.client = null;
-            if (this.onDisconnected != null)
-                this.onDisconnected("Success");
-            this.isRunning = false;
+            try
+            {
+ 
+                    this.client.Shutdown(SocketShutdown.Both);
+                    this.client.Close();
+                    //this.client.Dispose();
+                    this.client = null;
+                    if (this.onDisconnected != null)
+                        this.onDisconnected("Success");
+                    this.isRunning = false;
+
+                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + "\r\n" + e.StackTrace);
+            }
+
         }
 
 
-
+        private void StartProcRecvThread()
+        {
+            this.isRunning = true;
+            t_ProcRecv = new Thread(new ParameterizedThreadStart(DoProcRecv));
+            t_ProcRecv.Start(this);
+        }
 
         public void ConnectCallback(IAsyncResult ar)
         {
@@ -321,9 +372,9 @@ namespace JWNetwork
 
                 // Complete the connection.  
                 client.EndConnect(ar);
-                
 
-                t_ProcRecv.Start(this);
+                StartProcRecvThread();
+                
 
                 Console.WriteLine("Socket connected to {0}",
                     client.RemoteEndPoint.ToString());
@@ -335,6 +386,11 @@ namespace JWNetwork
                     this.onConnected();
 
                 Receive(client); // start recv 
+            }
+            catch (SocketException e)
+            {
+                if (this.onDisconnected != null)
+                    this.onDisconnected(e.Message);
             }
             catch (Exception e)
             {
@@ -368,6 +424,8 @@ namespace JWNetwork
                 // from the asynchronous state object.  
                 StateObject state = (StateObject) ar.AsyncState;
                 Socket client = state.workSocket;
+                if(client!=null && !client.Connected)
+                    return;
 
                 // Read data from the remote device.  
                 int bytesRead = client.EndReceive(ar);
@@ -378,8 +436,8 @@ namespace JWNetwork
                     state.sb.Append(Encoding.Unicode.GetString(state.buffer, 0, bytesRead));
 
                     byte[] bsRead = new byte[bytesRead];
-                    Array.Copy(state.buffer,0, bsRead,0, bytesRead);
-                  
+                    Array.Copy(state.buffer, 0, bsRead, 0, bytesRead);
+
                     this.lsRecvBytes.Enqueue(bsRead);
 
                     //Console.WriteLine("Read Raw Data = " + StringTools.Bin2Hex(bsRead));
@@ -400,6 +458,24 @@ namespace JWNetwork
                     // Signal that all bytes have been received.  
                     //receiveDone.Set();
                 }
+            }
+            catch (SocketException e)
+            {
+                if (e.SocketErrorCode == SocketError.ConnectionReset)
+                {
+                    
+                }
+
+                // to disconnect and release 
+                this.Stop();
+                if (this.onDisconnected != null)
+                    this.onDisconnected(e.Message);
+
+                Console.WriteLine(e.Message  + e.StackTrace);
+            }
+            catch (ObjectDisposedException e)
+            {
+                Console.WriteLine(e.ToString());
             }
             catch (Exception e)
             {

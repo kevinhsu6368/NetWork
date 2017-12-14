@@ -24,7 +24,6 @@ E:\Work2\NetWork\TestClient\obj\Debug\TestClient.Properties.Resources.resources
 E:\Work2\NetWork\TestClient\obj\Debug\TestClient.csproj.GenerateResource.Cache
 E:\Work2\NetWork\TestClient\obj\Debug\TestClient.exe
 E:\Work2\NetWork\TestClient\obj\Debug\TestClient.pdb
-E:\Work2\NetWork\TestClient\obj\Debug\TestClient.csprojResolveAssemblyReference.cache
 D:\Work2\Network\TestClient\bin\Debug\TestClient.exe.config
 D:\Work2\Network\TestClient\bin\Debug\TestClient.exe
 D:\Work2\Network\TestClient\bin\Debug\TestClient.pdb
@@ -34,3 +33,4 @@ D:\Work2\Network\TestClient\obj\Debug\TestClient.csproj.GenerateResource.Cache
 D:\Work2\Network\TestClient\obj\Debug\TestClient.exe
 D:\Work2\Network\TestClient\obj\Debug\TestClient.pdb
 D:\Work2\Network\TestClient\obj\Debug\TestClient.csprojResolveAssemblyReference.cache
+E:\Work2\NetWork\TestClient\obj\Debug\TestClient.csprojResolveAssemblyReference.cache

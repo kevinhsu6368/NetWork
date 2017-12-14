@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Text;
-using System.Threading.Tasks;
+//using System.Threading.Tasks;
 
 namespace JWNetwork
 {
@@ -203,44 +203,135 @@ namespace JWNetwork
 
         }
 
+        /// <summary>
+        /// 收到封包並解析資料,並觸發已註冊的處理事件
+        /// </summary>
+        /// <param name="msgID">註冊的功能識別碼</param>
+        /// <param name="datas">資料</param>
         public delegate void OnRawEvent(UInt16 msgID, byte[] datas);
 
+        /// <summary>
+        /// 收到封包並解析資料,並觸發已註冊的處理事件
+        /// </summary>
+        /// <param name="functionName">註冊的功能名稱</param>
+        /// <param name="datas">資料</param>
         public delegate void OnRPCEvent(string functionName, Dictionary<string, string> datas);
 
+        /// <summary>
+        /// 連線成功的事件
+        /// </summary>
         public delegate void OnConnected();
 
+        /// <summary>
+        /// 連線失敗的事件
+        /// </summary>
+        /// <param name="errMsg"></param>
+        public delegate void OnConnectError(string errMsg);
+
+        /// <summary>
+        /// 連線逾時的事件
+        /// </summary>
         public delegate void OnConnecteTimeout();
 
+        /// <summary>
+        /// 斷線的事件
+        /// </summary>
+        /// <param name="flag">斷線額外資訊</param>
         public delegate void OnDisconnected(string flag);
 
+        /// <summary>
+        /// 接收封包的事件
+        /// </summary>
         public delegate void OnRecv();
 
+        /// <summary>
+        /// 發送封包成功的事件
+        /// </summary>
         public delegate void OnSend();
 
     }
 
-
-    public class NetEventBase //: IRPCEvent, IRawEvent
+    /// <summary>
+    /// 網路功能事件的基礎煩別
+    /// </summary>
+    public class NetEventBase 
     {
         public NetEventBase()
         {
-            onRawEvent = OnRawEvent;
-            onRpcEvent = onRpcEvent;
+            this.onRawEvent = this.OnRawEvent;
+            this.onRpcEvent = this.OnRPCEvent;
         }
 
         public AsynchronousClient client;
         public NetEvent.OnRawEvent onRawEvent;
         public NetEvent.OnRPCEvent onRpcEvent;
 
+        #region C2S 
+
+        public string c2s_functionName;
+        public Dictionary<string, string> c2s_data = new Dictionary<string, string>();
+
+        #endregion
+
+
+        #region S2C
+
+        public string s2c_functionName;
+
+
+        public virtual void OnRPCEvent(Dictionary<string, string> datas)
+        {
+
+        }
+
+        #endregion
+
+
+        /// <summary>
+        /// 收到封包並解析資料,並觸發已註冊的處理事件
+        /// 1.如果 
+        /// </summary>
+        /// <param name="functionName"></param>
+        /// <param name="datas"></param>
         public virtual void OnRPCEvent(string functionName, Dictionary<string, string> datas)
         {
-            
+            if (!string.IsNullOrEmpty(this.s2c_functionName) && this.s2c_functionName.Equals(functionName))
+            {
+                OnRPCEvent(datas);
+            }
+
         }
 
 
         public virtual void OnRawEvent(ushort msgID, byte[] datas)
         {
             
+        }
+
+
+        /// <summary>
+        /// 準備 Client 2 Server 的資料,
+        /// 需要指定下列內容
+        /// c2s_functionName : 要執行的功能名稱 
+        /// c2s_data : 要帶的資料
+        /// </summary>
+        public virtual void MakeC2SData()
+        {
+            
+        }
+
+        /// <summary>
+        /// 執行 Client 2 Server 的事件
+        /// (必需先呼叫 MakeC2SData , 指定好遠方的功能及參數資料)
+        /// </summary>
+        /// <param name="bDefault"></param>
+        public virtual void ExecuteC2SEvent(bool bDefault)
+        {
+            if (bDefault && !string.IsNullOrEmpty(this.c2s_functionName))
+            {
+                Send(this.c2s_functionName, this.c2s_data);
+            }
+
         }
 
         public void AttachClient(AsynchronousClient client)
@@ -256,6 +347,11 @@ namespace JWNetwork
             client.SendPacket(msgID,datas);
         }
 
+        /// <summary>
+        /// 發送命令資料 , 執行遠方功能
+        /// </summary>
+        /// <param name="functionName">功能名稱</param>
+        /// <param name="data">資料</param>
         public void Send(string functionName, Dictionary<string,string> data)
         {
             if (client == null)

@@ -34,12 +34,15 @@ namespace TestServer
                         {
                             Dictionary<string, string> data = new Dictionary<string, string>();
                             data.Add("ErrorCode", "0");
-                            data.Add("GameServer", "192.168.1.101:8800");
+                            data.Add("GameServer", "192.168.1.101^8800");
                             this.Send(client,"S2C_Login", data);
                         }
                         else
                         {
-
+                            Dictionary<string, string> data = new Dictionary<string, string>();
+                            data.Add("ErrorCode", "1");
+                            data.Add("GameServer", "");
+                            this.Send(client, "S2C_Login", data);
                         }
                     }
                     break;
