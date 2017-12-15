@@ -83,7 +83,7 @@
             // 
             // btn_sendMSG
             // 
-            this.btn_sendMSG.Location = new System.Drawing.Point(107, 560);
+            this.btn_sendMSG.Location = new System.Drawing.Point(92, 641);
             this.btn_sendMSG.Name = "btn_sendMSG";
             this.btn_sendMSG.Size = new System.Drawing.Size(75, 23);
             this.btn_sendMSG.TabIndex = 1;
@@ -93,7 +93,7 @@
             // 
             // btn_sendHex
             // 
-            this.btn_sendHex.Location = new System.Drawing.Point(26, 560);
+            this.btn_sendHex.Location = new System.Drawing.Point(11, 641);
             this.btn_sendHex.Name = "btn_sendHex";
             this.btn_sendHex.Size = new System.Drawing.Size(75, 23);
             this.btn_sendHex.TabIndex = 1;
@@ -168,7 +168,7 @@
             // 
             // btn_login
             // 
-            this.btn_login.Location = new System.Drawing.Point(21, 75);
+            this.btn_login.Location = new System.Drawing.Point(180, 32);
             this.btn_login.Name = "btn_login";
             this.btn_login.Size = new System.Drawing.Size(84, 23);
             this.btn_login.TabIndex = 1;
@@ -222,7 +222,7 @@
             this.gbx_login.Controls.Add(this.btn_login);
             this.gbx_login.Location = new System.Drawing.Point(25, 137);
             this.gbx_login.Name = "gbx_login";
-            this.gbx_login.Size = new System.Drawing.Size(281, 112);
+            this.gbx_login.Size = new System.Drawing.Size(281, 155);
             this.gbx_login.TabIndex = 11;
             this.gbx_login.TabStop = false;
             this.gbx_login.Text = "Login : ";
@@ -244,7 +244,7 @@
             this.gbx_register.Controls.Add(this.txt_last_name);
             this.gbx_register.Controls.Add(this.txt_first_name);
             this.gbx_register.Controls.Add(this.btn_regist);
-            this.gbx_register.Location = new System.Drawing.Point(24, 255);
+            this.gbx_register.Location = new System.Drawing.Point(24, 298);
             this.gbx_register.Name = "gbx_register";
             this.gbx_register.Size = new System.Drawing.Size(282, 299);
             this.gbx_register.TabIndex = 11;
@@ -395,7 +395,7 @@
             // label_login_status
             // 
             this.label_login_status.AutoSize = true;
-            this.label_login_status.Location = new System.Drawing.Point(111, 80);
+            this.label_login_status.Location = new System.Drawing.Point(19, 75);
             this.label_login_status.Name = "label_login_status";
             this.label_login_status.Size = new System.Drawing.Size(14, 12);
             this.label_login_status.TabIndex = 9;
@@ -455,7 +455,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(613, 595);
+            this.ClientSize = new System.Drawing.Size(613, 676);
             this.Controls.Add(this.gbx_register);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.gbx_login);

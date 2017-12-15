@@ -66,7 +66,7 @@ namespace TestClient
             if (err == "00000000")
             {
                 if (onLoginResult != null)
-                    onLoginResult("Login Success ^ ^" + "\r\n" + "GameServer : " + datas["GaneServer"]);
+                    onLoginResult("Login Success ^ ^" + "\r\n" + "PlayerID : " + datas["PlayID"] + "\r\n" + "GameServer : " + datas["GaneServer"]);
                 Console.WriteLine("Login Success ^ ^");
             }
             else

@@ -21,7 +21,7 @@ namespace JWNetwork
         public Socket workSocket = null;
 
         // Size of receive buffer.  
-        public const int BufferSize = 1024;
+        public const int BufferSize = 1024 * 1024;
 
         // Receive buffer.  
         public byte[] buffer = new byte[BufferSize];
@@ -65,7 +65,10 @@ namespace JWNetwork
         private bool isRunning = false;
 
  
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
         private static void DoProcRecv(object obj)
         {
             AsynchronousClient client = (AsynchronousClient)obj;
@@ -78,14 +81,23 @@ namespace JWNetwork
                 try
                 {
                     byte [] p = client.lsRecvBytes.Dequeue();
-             
-                    if (client.packetType == PacketType.Data) // json-utf8
+
+                    #region 沒有封包頭的封包格式 json-utf8
+                    if (client.packetType == PacketType.Data)  
                     {
                         string json = Encoding.UTF8.GetString(p);
-                        Console.WriteLine(json);
+                        int maxLen = 200;
+                        if (json.Length > maxLen)
+                        {
+                            Console.WriteLine(json.Substring(0, maxLen) + " ... ");
+                        }
+                        else
+                        {
+                            Console.WriteLine(json);
+                        }
+                        
 
                         // parser json 
-
                         JsonData jObj = JsonMapper.ToObject(json);
                         
 
@@ -102,38 +114,23 @@ namespace JWNetwork
                             data.Add(key, value);
                         }
 
-                        /*
-                        Dictionary<string, string> data = new Dictionary<string, string>();
-                        foreach (var line in lsLines)
-                        {
-                            string[] ss = line.Replace("\"", "").Split(':');
-                            if (ss.Length != 2)
-                                continue;
-                            string key = ss[0].Trim(new[] { ' ', '\t' });
-                            string value = ss[1].Trim(new[] { ' ', '\t', ',' });
-                            if (key == "Function")
-                            {
-                                function = value;
-                            }
-                            else
-                            {
-                                data.Add(key, value);
-                            }
-                        }
-                        */
 
                         NetEvent.OnRPCEvent callBack = client.lsRPCEvent[function];
+
                         if (callBack != null)
                             callBack(function, data);
 
 
 
                     }
-                    else if (client.packetType == PacketType.HeaderAndData)
+                    #endregion
+
+                    #region 有封包頭的封包格式
+                    else if (client.packetType == PacketType.HeaderAndData) 
                     {
 
                     }
-
+                    #endregion
 
                 }
                 catch (InvalidOperationException ex)
@@ -143,6 +140,11 @@ namespace JWNetwork
             }
         }
 
+        /// <summary>
+        /// 啟動網路連線服務
+        /// </summary>
+        /// <param name="ip">IP 位址</param>
+        /// <param name="port">通訊埠</param>
         public void Start(String ip, int port)
         {
             // Connect to a remote device.  
@@ -169,11 +171,11 @@ namespace JWNetwork
                 client.BeginConnect(remoteEP,
                     new AsyncCallback(ConnectCallback), client);
 
-                if (connectDone.WaitOne(TIMEOUT))
-                {
+                //if (connectDone.WaitOne(TIMEOUT))
+                //{
                     //if (this.onConnecteTimeout != null)
                     //    this.onConnecteTimeout();
-                }
+                //}
 
                 /*
             // Send test data to the remote device.  
@@ -283,28 +285,14 @@ namespace JWNetwork
             Send(bsData);
         }
 
-        public class JsonRPC
-        {
-            public string functionName;
-        }
 
-        public class LoginData : JsonRPC
-        {
-            public string Name;
-            public string Pwd;
-        }
-   
 
-        public void SendJsonRPC(JsonRPC classObject)
-        {
-            // classObect 2 json strign
-        }
 
         /// <summary>
         /// 發送 RPC - JSON(utf8) 字串封包
         /// </summary>
-        /// <param name="function"></param>
-        /// <param name="data"></param>
+        /// <param name="function">功能名稱</param>
+        /// <param name="data">資料</param>
         public void SendRPC(string function, Dictionary<string, string> data)
         {
             //Dictionary<string,string > loginData = new Dictionary<string, string>();
@@ -318,6 +306,11 @@ namespace JWNetwork
 
         }
 
+        /// <summary>
+        /// 發送 RPC - Byte Array 資料
+        /// </summary>
+        /// <param name="msgID"></param>
+        /// <param name="datas"></param>
         public void SendPacket(UInt16 msgID, byte[] datas)
         {
             Packet p = new Packet(msgID,datas);
@@ -332,7 +325,9 @@ namespace JWNetwork
 
 
 
-
+        /// <summary>
+        /// 結束網路線服務
+        /// </summary>
         public void Stop()
         {
             try
