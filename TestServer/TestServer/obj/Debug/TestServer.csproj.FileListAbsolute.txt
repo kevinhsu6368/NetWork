@@ -19,9 +19,9 @@ E:\Work2\NetWork\TestServer\TestServer\obj\Debug\TestServer.csprojResolveAssembl
 D:\Work2\Network\TestServer\TestServer\bin\Debug\TestServer.exe.config
 D:\Work2\Network\TestServer\TestServer\bin\Debug\TestServer.exe
 D:\Work2\Network\TestServer\TestServer\bin\Debug\TestServer.pdb
-D:\Work2\Network\TestServer\TestServer\obj\Debug\TestServer.csprojResolveAssemblyReference.cache
 D:\Work2\Network\TestServer\TestServer\obj\Debug\TestServer.Form1.resources
 D:\Work2\Network\TestServer\TestServer\obj\Debug\TestServer.Properties.Resources.resources
 D:\Work2\Network\TestServer\TestServer\obj\Debug\TestServer.csproj.GenerateResource.Cache
 D:\Work2\Network\TestServer\TestServer\obj\Debug\TestServer.exe
 D:\Work2\Network\TestServer\TestServer\obj\Debug\TestServer.pdb
+D:\Work2\Network\TestServer\TestServer\obj\Debug\TestServer.csprojResolveAssemblyReference.cache

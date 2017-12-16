@@ -44,6 +44,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.gbx_login = new System.Windows.Forms.GroupBox();
+            this.label_login_status = new System.Windows.Forms.Label();
             this.gbx_register = new System.Windows.Forms.GroupBox();
             this.rbn_sex_unknow = new System.Windows.Forms.RadioButton();
             this.rbn_sex_woman = new System.Windows.Forms.RadioButton();
@@ -60,7 +61,6 @@
             this.txt_last_name = new System.Windows.Forms.TextBox();
             this.txt_first_name = new System.Windows.Forms.TextBox();
             this.btn_regist = new System.Windows.Forms.Button();
-            this.label_login_status = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label_forget = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -146,7 +146,7 @@
             this.txt_IP.Name = "txt_IP";
             this.txt_IP.Size = new System.Drawing.Size(133, 25);
             this.txt_IP.TabIndex = 6;
-            this.txt_IP.Text = "192.168.0.149";
+            this.txt_IP.Text = "192.168.1.106";
             // 
             // label3
             // 
@@ -226,6 +226,15 @@
             this.gbx_login.TabIndex = 11;
             this.gbx_login.TabStop = false;
             this.gbx_login.Text = "Login : ";
+            // 
+            // label_login_status
+            // 
+            this.label_login_status.AutoSize = true;
+            this.label_login_status.Location = new System.Drawing.Point(19, 75);
+            this.label_login_status.Name = "label_login_status";
+            this.label_login_status.Size = new System.Drawing.Size(14, 12);
+            this.label_login_status.TabIndex = 9;
+            this.label_login_status.Text = "...";
             // 
             // gbx_register
             // 
@@ -391,15 +400,6 @@
             this.btn_regist.Text = "Regist";
             this.btn_regist.UseVisualStyleBackColor = true;
             this.btn_regist.Click += new System.EventHandler(this.btn_regist_Click);
-            // 
-            // label_login_status
-            // 
-            this.label_login_status.AutoSize = true;
-            this.label_login_status.Location = new System.Drawing.Point(19, 75);
-            this.label_login_status.Name = "label_login_status";
-            this.label_login_status.Size = new System.Drawing.Size(14, 12);
-            this.label_login_status.TabIndex = 9;
-            this.label_login_status.Text = "...";
             // 
             // groupBox1
             // 

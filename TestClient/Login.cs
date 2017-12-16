@@ -62,21 +62,29 @@ namespace TestClient
 
         public override void OnRPCEvent(Dictionary<string, string> datas)
         {
-            string err = datas["ErrorCord"];
-            if (err == "00000000")
+            try
             {
-                if (onLoginResult != null)
-                    onLoginResult("Login Success ^ ^" + "\r\n" + "PlayerID : " + datas["PlayID"] + "\r\n" + "GameServer : " + datas["GaneServer"]);
-                Console.WriteLine("Login Success ^ ^");
-            }
-            else
-            {
-                if(onLoginResult != null)
-                    onLoginResult("Login Fail > <|||");
+                string err = datas["ErrorCord"];
+                if (err == "00000000")
+                {
+                    if (onLoginResult != null)
+                        onLoginResult("Login Success ^ ^" + "\r\n" + "PlayerID : " + datas["PlayID"] + "\r\n" +
+                                      "GameServer : " + datas["GaneServer"]);
+                    Console.WriteLine("Login Success ^ ^");
+                }
+                else
+                {
+                    if (onLoginResult != null)
+                        onLoginResult("Login Fail > <|||");
 
-                Console.WriteLine("Login Fail > <|||");
+                    Console.WriteLine("Login Fail > <|||");
+                }
             }
-                
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + "\r\n" + e.StackTrace);
+            }
+
         }
 
         //public override void OnRPCEvent(string functionName, Dictionary<string, string> datas)

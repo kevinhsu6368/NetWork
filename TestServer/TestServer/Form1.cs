@@ -111,5 +111,10 @@ namespace TestServer
         {
             //server.SendPacket();
         }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            server.Stop();
+        }
     }
 }

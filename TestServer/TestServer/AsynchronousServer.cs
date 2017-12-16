@@ -44,13 +44,14 @@ namespace JWNetwork
 
         Queue<ClientPacket> lsRecvClientPackets = new Queue<ClientPacket>();
 
-        Thread t_ProcRecv = new Thread(new ParameterizedThreadStart(DoProcRecv));
+        Thread t_ProcRecv ;//= new Thread(new ParameterizedThreadStart(DoProcRecv));
 
         private static void DoProcRecv(object obj)
         {
             AsynchronousServer server = (AsynchronousServer) obj;
             while (server.isRunning)
             {
+                Thread.Sleep(100);
                 if (server.lsRecvClientPackets.Count == 0)
                     continue;
 
@@ -121,12 +122,17 @@ namespace JWNetwork
             tcpServer.Start(this.acceptSize);
             DoBeginAcceptSocket(tcpServer);
 
+           
+            t_ProcRecv = new Thread(new ParameterizedThreadStart(DoProcRecv));
             isRunning = true;
             t_ProcRecv.Start(this);
         }
 
         public void Stop()
         {
+            if (!isRunning)
+                return ;
+
             foreach (Client c in lsClient)
             {
                 try

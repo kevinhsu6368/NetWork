@@ -445,11 +445,15 @@ namespace JWNetwork
                 }
                 else
                 {
+                    this.Stop();
+                    if (this.onDisconnected != null)
+                        this.onDisconnected("Remote Computer had exit !!!");
+
                     // All the data has arrived; put it in response.  
-                    if (state.sb.Length > 1)
-                    {
-                        response = state.sb.ToString();
-                    }
+                    //if (state.sb.Length > 1)
+                    // {
+                    //     response = state.sb.ToString();
+                    // }
                     // Signal that all bytes have been received.  
                     //receiveDone.Set();
                 }
