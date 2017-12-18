@@ -368,18 +368,19 @@ namespace JWNetwork
                 // Complete the connection.  
                 client.EndConnect(ar);
 
-                StartProcRecvThread();
+                
                 
 
                 Console.WriteLine("Socket connected to {0}",
                     client.RemoteEndPoint.ToString());
 
                 // Signal that the connection has been made.  
-                connectDone.Set();
+                //connectDone.Set();
 
                 if (this.onConnected != null)
                     this.onConnected();
 
+                StartProcRecvThread();
                 Receive(client); // start recv 
             }
             catch (SocketException e)
@@ -425,23 +426,60 @@ namespace JWNetwork
                 // Read data from the remote device.  
                 int bytesRead = client.EndReceive(ar);
 
+                // There might be more data, so store the data received so far.  
+                state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
+
                 if (bytesRead > 0)
                 {
-                    // There might be more data, so store the data received so far.  
-                    state.sb.Append(Encoding.Unicode.GetString(state.buffer, 0, bytesRead));
+                    // 檢查是否有結束符號 0x04
+                    if (this.packetType == PacketType.Data)
+                    {
+                        string str = state.sb.ToString();
+                        int procFInishPacketLen = 0;
+                        if (str.Contains("\u0004"))
+                        {
+                            string[] datas = str.Split('\u0004');
+                            string lastStr = "";
+                            for (int i = 0; i < datas.Length; i++)
+                            {
 
-                    byte[] bsRead = new byte[bytesRead];
-                    Array.Copy(state.buffer, 0, bsRead, 0, bytesRead);
+                                // 最後一個可能不完整
+                                if (i == (datas.Length - 1))
+                                {
+                                    lastStr = datas[i];
+                                    break;
+                                }
 
-                    this.lsRecvBytes.Enqueue(bsRead);
+                                // 一個完整封包
+                                byte[] bsFinishPacket = Encoding.UTF8.GetBytes(datas[i]);
+                                procFInishPacketLen += bsFinishPacket.Length + 1;
+                                this.lsRecvBytes.Enqueue(bsFinishPacket);
+                            }
+                            state.sb.Remove(0, procFInishPacketLen);
 
-                    //Console.WriteLine("Read Raw Data = " + StringTools.Bin2Hex(bsRead));
+                            client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                                new AsyncCallback(ReceiveCallback), state);
 
-                    // Get the rest of the data.  
-                    client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                        new AsyncCallback(ReceiveCallback), state);
+                        }
+                        else // 有不完整封包 , 未讀完 , 繼續讀後續封包
+                        {
+                            client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                                new AsyncCallback(ReceiveCallback), state);
+                        }
+                    }
+                    else
+                    {
+                        byte[] bsRead = new byte[bytesRead];
+                        Array.Copy(state.buffer, 0, bsRead, 0, bytesRead);
 
-                    //receiveDone.Set();
+                        this.lsRecvBytes.Enqueue(bsRead);
+
+                        //Console.WriteLine("Read Raw Data = " + StringTools.Bin2Hex(bsRead));
+
+                        // Get the rest of the data.  
+                        client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                            new AsyncCallback(ReceiveCallback), state);
+                    }
                 }
                 else
                 {

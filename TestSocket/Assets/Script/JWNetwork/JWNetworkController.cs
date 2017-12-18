@@ -11,8 +11,15 @@ public class JWNetworkController : MonoBehaviour
 
 
     public Text txt_status_value;
+
+    public Text txt_LoginServer_IP;
+    public Text txt_loginServer_Port;
+
+
     public Text txt_Login_Account;
     public Text txt_Login_Password;
+
+
 
     private Login login = new Login();
 
@@ -67,7 +74,9 @@ public class JWNetworkController : MonoBehaviour
 
     public void ConnectLoginServer()
     {
-        loginServer.Start("192.168.1.106",8889);
+        string ip = txt_LoginServer_IP == null ? "192.168.1.106" : txt_LoginServer_IP.text;
+        int port = txt_loginServer_Port == null ? 8889 : int.Parse(txt_loginServer_Port.text);
+        loginServer.Start(ip,port);
     }
 
     public void StopLoginServer()

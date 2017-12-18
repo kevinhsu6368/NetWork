@@ -348,8 +348,8 @@ namespace JWNetwork
             //console.
             try
             {
-                if (!listener.Server.Connected)
-                    return;
+               /// if (!listener.Server.Connected)
+               //     return;
 
                 Socket clientSocket = listener.EndAcceptSocket(ar);
                 Client c = new Client(clientSocket);
@@ -368,7 +368,7 @@ namespace JWNetwork
                 //clientSocket.BeginSend(c.sendBuff, 0, c.sendBuff.Length, 0, new AsyncCallback(DoSendCallback), c);
 
                 // Signal the calling thread to continue.
-                clientConnected.Set();
+                //clientConnected.Set();
 
                 // next connecter
                 DoBeginAcceptSocket(tcpServer);

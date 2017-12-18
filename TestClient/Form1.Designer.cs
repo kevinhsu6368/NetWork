@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.btn_start = new System.Windows.Forms.Button();
-            this.btn_sendMSG = new System.Windows.Forms.Button();
+            this.btn_sendJSON = new System.Windows.Forms.Button();
             this.btn_sendHex = new System.Windows.Forms.Button();
             this.btn_Stop = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -66,6 +66,7 @@
             this.label13 = new System.Windows.Forms.Label();
             this.txt_forget_password = new System.Windows.Forms.TextBox();
             this.btn_forget = new System.Windows.Forms.Button();
+            this.txt_json = new System.Windows.Forms.TextBox();
             this.gbx_login.SuspendLayout();
             this.gbx_register.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -81,15 +82,15 @@
             this.btn_start.UseVisualStyleBackColor = true;
             this.btn_start.Click += new System.EventHandler(this.btn_start_Click);
             // 
-            // btn_sendMSG
+            // btn_sendJSON
             // 
-            this.btn_sendMSG.Location = new System.Drawing.Point(92, 641);
-            this.btn_sendMSG.Name = "btn_sendMSG";
-            this.btn_sendMSG.Size = new System.Drawing.Size(75, 23);
-            this.btn_sendMSG.TabIndex = 1;
-            this.btn_sendMSG.Text = "Send MSG";
-            this.btn_sendMSG.UseVisualStyleBackColor = true;
-            this.btn_sendMSG.Click += new System.EventHandler(this.btn_sendMSG_Click);
+            this.btn_sendJSON.Location = new System.Drawing.Point(320, 306);
+            this.btn_sendJSON.Name = "btn_sendJSON";
+            this.btn_sendJSON.Size = new System.Drawing.Size(75, 23);
+            this.btn_sendJSON.TabIndex = 1;
+            this.btn_sendJSON.Text = "Send JSON";
+            this.btn_sendJSON.UseVisualStyleBackColor = true;
+            this.btn_sendJSON.Click += new System.EventHandler(this.btn_sendJSON_Click);
             // 
             // btn_sendHex
             // 
@@ -451,6 +452,14 @@
             this.btn_forget.UseVisualStyleBackColor = true;
             this.btn_forget.Click += new System.EventHandler(this.btn_forget_Click);
             // 
+            // txt_json
+            // 
+            this.txt_json.Location = new System.Drawing.Point(320, 332);
+            this.txt_json.Multiline = true;
+            this.txt_json.Name = "txt_json";
+            this.txt_json.Size = new System.Drawing.Size(281, 120);
+            this.txt_json.TabIndex = 6;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -467,7 +476,8 @@
             this.Controls.Add(this.txt_IP);
             this.Controls.Add(this.btn_Stop);
             this.Controls.Add(this.btn_sendHex);
-            this.Controls.Add(this.btn_sendMSG);
+            this.Controls.Add(this.txt_json);
+            this.Controls.Add(this.btn_sendJSON);
             this.Controls.Add(this.btn_start);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -486,7 +496,7 @@
         #endregion
 
         private System.Windows.Forms.Button btn_start;
-        private System.Windows.Forms.Button btn_sendMSG;
+        private System.Windows.Forms.Button btn_sendJSON;
         private System.Windows.Forms.Button btn_sendHex;
         private System.Windows.Forms.Button btn_Stop;
         private System.Windows.Forms.Label label2;
@@ -523,6 +533,7 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox txt_forget_password;
         private System.Windows.Forms.Button btn_forget;
+        private System.Windows.Forms.TextBox txt_json;
     }
 }
 

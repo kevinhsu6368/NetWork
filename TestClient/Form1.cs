@@ -125,5 +125,10 @@ namespace TestClient
             forget.MakeC2SData();
             forget.ExecuteC2SEvent(true);
         }
+
+        private void btn_sendJSON_Click(object sender, EventArgs e)
+        {
+            c.Send(txt_json.Text);
+        }
     }
 }

@@ -428,18 +428,57 @@ namespace JWNetwork
                 if (bytesRead > 0)
                 {
                     // There might be more data, so store the data received so far.  
-                    state.sb.Append(Encoding.Unicode.GetString(state.buffer, 0, bytesRead));
+                    state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
 
-                    byte[] bsRead = new byte[bytesRead];
-                    Array.Copy(state.buffer, 0, bsRead, 0, bytesRead);
+                    // 檢查是否有結束符號 0x04
+                    if (this.packetType == PacketType.Data)
+                    {
+                        string str = state.sb.ToString();
+                        int procFInishPacketLen = 0;
+                        if (str.Contains("\u0004"))
+                        {
+                            string[] datas = str.Split('\u0004');
+                            string lastStr = "";
+                            for (int i = 0; i < datas.Length; i++)
+                            {
 
-                    this.lsRecvBytes.Enqueue(bsRead);
+                                // 最後一個可能不完整
+                                if (i == (datas.Length - 1))
+                                {
+                                    lastStr = datas[i];
+                                    break;
+                                }
 
-                    //Console.WriteLine("Read Raw Data = " + StringTools.Bin2Hex(bsRead));
+                                // 一個完整封包
+                                byte[] bsFinishPacket = Encoding.UTF8.GetBytes(datas[i]);
+                                procFInishPacketLen += bsFinishPacket.Length + 1;
+                                this.lsRecvBytes.Enqueue(bsFinishPacket);
+                            }
+                            state.sb.Remove(0, procFInishPacketLen);
 
-                    // Get the rest of the data.  
-                    client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                        new AsyncCallback(ReceiveCallback), state);
+                            client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                                new AsyncCallback(ReceiveCallback), state);
+
+                            return;
+
+                        }
+                    }
+                    else
+                    {
+                         byte[] bsRead = new byte[bytesRead];
+                        Array.Copy(state.buffer, 0, bsRead, 0, bytesRead);
+
+                        this.lsRecvBytes.Enqueue(bsRead);
+
+                        //Console.WriteLine("Read Raw Data = " + StringTools.Bin2Hex(bsRead));
+
+                        // Get the rest of the data.  
+                        client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                            new AsyncCallback(ReceiveCallback), state);                       
+                    }
+
+
+
 
                     //receiveDone.Set();
                 }
@@ -522,7 +561,7 @@ namespace JWNetwork
                 return;
 
             // Convert the string data to byte data using ASCII encoding.  
-            byte[] byteData = Encoding.Unicode.GetBytes(msg);
+            byte[] byteData = Encoding.UTF8.GetBytes(msg);
 
             Send(byteData);
 
