@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="D:\Work2\Network\TestSocket\AndroidProject\TestSocket\libs\unity-classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="01280a7ebe198969bd717d3c7e2275c7c72d439c">
+        <dex dex="D:\Work2\Network\TestSocket\AndroidProject\TestSocket\build\intermediates\pre-dexed\debug\unity-classes_ff47306816e528457aba60f155c3887a8aee2e4c.jar" />
+    </item>
+
+</items>

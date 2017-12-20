@@ -7,6 +7,10 @@ public class Main : MonoBehaviour {
     public GameObject panel_login;
     public GameObject panel_registed;
 
+    public GameObject background1;
+    public GameObject background2;
+    public GameObject background3;
+
     // Use this for initialization
     void Start () {
 		
@@ -25,6 +29,9 @@ public class Main : MonoBehaviour {
         if (panel_registed != null)
             panel_registed.SetActive(false);
 
+        background1.SetActive(true);
+        background2.SetActive(false);
+
     }
 
     public void ShowRegisted()
@@ -34,6 +41,9 @@ public class Main : MonoBehaviour {
 
         if (panel_registed != null)
             panel_registed.SetActive(true);
+
+        background1.SetActive(false);
+        background2.SetActive(true);
     }
 
 

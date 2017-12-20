@@ -8,9 +8,15 @@ using JWNetwork;
 
 public class Registered : NetEventBase
 {
+    public string firstName;
+    public string lastName;
     public string nickName;
-    public string email;
     public string pwd;
+    public string birthday;
+    public string email;
+    public string gender;
+    public string country;
+    public string photo;
 
     public override void MakeC2SData()
     {
@@ -34,22 +40,23 @@ public class Registered : NetEventBase
         switch (err)
         {
             case "0":
-            {
-                 S2CResult("Registed : Success");
-            }
+                {
+                    S2CResult("Registed : Success");
+                }
                 break;
             case "1":
-            {
+                {
                     S2CResult("Registed : email重複");
                 }
                 break;
             case "2":
-            {
+                {
                     S2CResult("Registed : 暱稱重複");
-            }
+                }
                 break;
-                S2CResult("Registed : error code 無效");
+
             default:
+                S2CResult("Registed : error code 無效");
                 break;
         }
     }

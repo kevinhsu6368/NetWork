@@ -419,6 +419,11 @@ namespace JWNetwork
             
         }
 
+        public void MakeC2SData(Hashtable data)
+        {
+            this.c2s_data = data;
+        }
+
         /// <summary>
         /// 執行 Client 2 Server 的事件
         /// (必需先呼叫 MakeC2SData , 指定好遠方的功能及參數資料)

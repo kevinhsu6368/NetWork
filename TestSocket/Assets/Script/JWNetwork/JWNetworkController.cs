@@ -130,6 +130,7 @@ public class JWNetworkController : MonoBehaviour
 
     public void Registed()
     {
+        /*
         regist.nickName = "kevin";
         regist.pwd = "123";
 
@@ -141,8 +142,25 @@ public class JWNetworkController : MonoBehaviour
 
         if (txt_regist_Email != null)
             regist.email = txt_regist_Email.text;
+            
 
-        regist.MakeC2SData();
+        //regist.MakeC2SData();
+
+    */
+
+        Hashtable data = new Hashtable();
+
+        data.Add("firstName", "中文");
+        data.Add("lastName", "ok123");
+        data.Add("nickName", txt_regist_Name.text);
+        data.Add("pwd", txt_regist_Password.text);
+        data.Add("birthday", "2017-01-01");
+        data.Add("email", txt_regist_Email.text);
+        data.Add("gender", 1);
+        data.Add("country", "158");
+        data.Add("photo", 21845);
+
+        regist.MakeC2SData(data);
         regist.ExecuteC2SEvent(true);
     }
 }
