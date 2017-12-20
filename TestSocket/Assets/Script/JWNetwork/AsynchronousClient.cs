@@ -6,9 +6,9 @@ using System.Threading;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
-//using System.Security.Policy;
-//using System.Windows.Forms.Layout;
-using LitJson;
+
+
+ 
 
 
 namespace JWNetwork
@@ -83,6 +83,35 @@ namespace JWNetwork
                     byte [] p = client.lsRecvBytes.Dequeue();
 
                     #region 沒有封包頭的封包格式 json-utf8
+
+                    if (client.packetType == PacketType.Len4BAndData)
+                    {
+                        int _dataSize = System.BitConverter.ToInt32(p, 0);
+                        _dataSize = IPAddress.NetworkToHostOrder(_dataSize);
+                        string json = Encoding.UTF8.GetString(p,4,_dataSize);
+                        int maxLen = 200;
+                        if (json.Length > maxLen)
+                        {
+                            Console.WriteLine(json.Substring(0, maxLen) + " ... ");
+                        }
+                        else
+                        {
+                            Console.WriteLine(json);
+                        }
+
+                        
+                        Hashtable hPacket =  (Hashtable)MiniJSON.jsonDecode(json);
+
+                        string function = hPacket["methodName"].ToString();
+
+                        Hashtable hData = (Hashtable)hPacket["paramObject"];
+
+
+                        NetEvent.OnRPCEvent callBack = client.lsRPCEvent[function];
+
+                        if (callBack != null)
+                            callBack(function, hData);
+                    }
                     if (client.packetType == PacketType.Data)  
                     {
                         string json = Encoding.UTF8.GetString(p);
@@ -98,21 +127,22 @@ namespace JWNetwork
                         
 
                         // parser json 
-                        JsonData jObj = JsonMapper.ToObject(json);
-                        
+                        //JsonData jObj = JsonMapper.ToObject(json);
+                        Hashtable data = (Hashtable)MiniJSON.jsonDecode(json);
+                        string function = data["methodName"].ToString();
 
-                        string[] lsLines = json.Replace("\r\n", "\n").Split('\n');
-                        string function = jObj["Function"].ToString();
-                        Dictionary<string, string> data = new Dictionary<string, string>();
-                        foreach (KeyValuePair<string, JsonData> v in jObj)
-                        {
-                            if(v.Key == "Function")
-                                continue;
+                        //string[] lsLines = json.Replace("\r\n", "\n").Split('\n');
+                        //string function = jObj["Function"].ToString();
+                        //Hashtable data = new Hashtable();
+                        //foreach (KeyValuePair<string, JsonData> v in jObj)
+                        //{
+                        //    if(v.Key == "Function")
+                        //        continue;
 
-                            string key = v.Key;
-                            string value = v.Value.IsString ? v.Value.ToString() : ""; // 先轉一層
-                            data.Add(key, value);
-                        }
+                        //    string key = v.Key;
+                        //    string value = v.Value.IsString ? v.Value.ToString() : ""; // 先轉一層
+                        //    data.Add(key, value);
+                        //}
 
 
                         NetEvent.OnRPCEvent callBack = client.lsRPCEvent[function];
@@ -268,6 +298,10 @@ namespace JWNetwork
             {
                 Send(p.bsData);
             }
+            if (this.packetType == PacketType.Len4BAndData)
+            {
+                Send(p.Len4BData);
+            }
             else if (this.packetType == PacketType.HeaderAndData)
             {
                 Send(p.FullData);
@@ -293,7 +327,7 @@ namespace JWNetwork
         /// </summary>
         /// <param name="function">功能名稱</param>
         /// <param name="data">資料</param>
-        public void SendRPC(string function, Dictionary<string, string> data)
+        public void SendRPC(string function, Hashtable data)
         {
             //Dictionary<string,string > loginData = new Dictionary<string, string>();
             //loginData.Add("Name","Kevin");
@@ -368,19 +402,18 @@ namespace JWNetwork
                 // Complete the connection.  
                 client.EndConnect(ar);
 
-                
+                StartProcRecvThread();
                 
 
                 Console.WriteLine("Socket connected to {0}",
                     client.RemoteEndPoint.ToString());
 
                 // Signal that the connection has been made.  
-                //connectDone.Set();
+                connectDone.Set();
 
                 if (this.onConnected != null)
                     this.onConnected();
 
-                StartProcRecvThread();
                 Receive(client); // start recv 
             }
             catch (SocketException e)
@@ -426,11 +459,11 @@ namespace JWNetwork
                 // Read data from the remote device.  
                 int bytesRead = client.EndReceive(ar);
 
-                // There might be more data, so store the data received so far.  
-                state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
-
                 if (bytesRead > 0)
                 {
+                    // There might be more data, so store the data received so far.  
+                    state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
+
                     // 檢查是否有結束符號 0x04
                     if (this.packetType == PacketType.Data)
                     {
@@ -460,16 +493,13 @@ namespace JWNetwork
                             client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                                 new AsyncCallback(ReceiveCallback), state);
 
-                        }
-                        else // 有不完整封包 , 未讀完 , 繼續讀後續封包
-                        {
-                            client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                                new AsyncCallback(ReceiveCallback), state);
+                            return;
+
                         }
                     }
                     else
                     {
-                        byte[] bsRead = new byte[bytesRead];
+                         byte[] bsRead = new byte[bytesRead];
                         Array.Copy(state.buffer, 0, bsRead, 0, bytesRead);
 
                         this.lsRecvBytes.Enqueue(bsRead);
@@ -478,8 +508,13 @@ namespace JWNetwork
 
                         // Get the rest of the data.  
                         client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                            new AsyncCallback(ReceiveCallback), state);
+                            new AsyncCallback(ReceiveCallback), state);                       
                     }
+
+
+
+
+                    //receiveDone.Set();
                 }
                 else
                 {
@@ -560,7 +595,7 @@ namespace JWNetwork
                 return;
 
             // Convert the string data to byte data using ASCII encoding.  
-            byte[] byteData = Encoding.Unicode.GetBytes(msg);
+            byte[] byteData = Encoding.UTF8.GetBytes(msg);
 
             Send(byteData);
 

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Text;
+
 //using System.Threading.Tasks;
 
 namespace JWNetwork
@@ -33,7 +35,11 @@ namespace JWNetwork
         /// 封包只有 Data 的部份
         /// Send 
         /// </summary>
-        Data
+        Data,
+        /// <summary>
+        /// 封包為 封包長度(4bytes) + 資料
+        /// </summary>
+        Len4BAndData
     }
 
     public class Packet
@@ -126,8 +132,65 @@ namespace JWNetwork
             Update();
         }
 
+        public Packet(string functionName, Hashtable datas)
+        {
+            // {
+            //   "function":"Login" , 
+            //   "Data": 
+            //   [
+            //     "Name":"Kevin",
+            //     "Pwd":"12345"
+            //   ]
+            // 
+            // }
 
-        public Packet(string functionName, Dictionary<string, string> datas, byte control)
+            /*
+            封包格式範例:
+
+            {
+                "methodName": "方法名稱",
+  "paramObject": {
+                    //JSON塞這裡面	
+                }
+            }
+            */
+
+            this.dataType = 0x01;
+            this.dataControl = 0x00;
+
+
+            string jsonStart = "{\r\n" +
+                               "  \"methodName\":\"" + functionName + "\",\r\n" +
+                               "  \"paramObject\" : {"  + "\r\n";
+
+            string jsonData = "";
+
+            jsonData = MiniJSON.jsonEncode(datas);
+
+            //int index = 1;
+            //foreach (var v in datas)
+            //{
+            //    string next = (index == datas.Count && datas.Count != 1) ? "\r\n" : ",\r\n";
+
+            //    jsonData += string.Format("  \"{0}\":\"{1}\"{2}", v.Key, v.Value, next);
+
+            //    index++;
+            //}
+
+            string jsonEnd = "}";
+
+            string str = jsonStart + jsonData + jsonEnd;
+            byte[] bsJsonData = Encoding.UTF8.GetBytes(str);
+
+            this.bsData = new byte[bsJsonData.Length];
+
+            Array.Copy(bsJsonData, 0, this.bsData, 0, bsJsonData.Length);
+
+            Update();
+        }
+
+
+        public Packet(string functionName, Hashtable datas, byte control)
         {
             // {
             //   "function":"Login" , 
@@ -144,24 +207,38 @@ namespace JWNetwork
 
 
             string jsonStart = "{\r\n" +
-                               "  \"Function\":\"" + functionName + "\",\r\n";
+                                "  \"methodName\":\"" + functionName + "\",\r\n" +
+                                "  \"paramObject\" : " + "\r\n";
 
             string jsonData = "";
-            int index = 1;
-            foreach (var v in datas)
-            {
-                string next = (index == datas.Count && datas.Count != 1) ? "\r\n" : ",\r\n";
-          
 
-                    jsonData += string.Format("  \"{0}\":\"{1}\"{2}", v.Key, v.Value, next);
+            jsonData = "  "  + MiniJSON.jsonEncode(datas);
 
-                index++;
-            }
+            //int index = 1;
+            //foreach (var v in datas)
+            //{
+            //    string next = (index == datas.Count && datas.Count != 1) ? "\r\n" : ",\r\n";
 
-            string jsonEnd = "}";
+
+            //        jsonData += string.Format("  \"{0}\":\"{1}\"{2}", v.Key, v.Value, next);
+
+            //    index++;
+            //}
+
+            string jsonEnd = "\r\n}";
+
+
+
 
             string str = jsonStart + jsonData + jsonEnd;
-            byte[] bsJsonData = Encoding.UTF8.GetBytes(str);
+
+            Hashtable _ht = new Hashtable();
+            _ht.Add("methodName", functionName);
+            _ht.Add("paramObject", datas);
+            string _json = MiniJSON.jsonEncode(_ht);
+
+            str = "";
+            byte[] bsJsonData = Encoding.UTF8.GetBytes(_json);
 
             this.bsData = new byte[bsJsonData.Length];
             
@@ -192,6 +269,20 @@ namespace JWNetwork
 
         }
 
+        public byte[] Len4BData
+        {
+            get
+            {
+                byte[] bs = new byte[/*len*/ 4 +  /*data*/ bsData.Length];
+                int arrayLength = System.Net.IPAddress.HostToNetworkOrder(bsData.Length);
+                byte[] bLen = BitConverter.GetBytes(arrayLength);
+                Array.Copy(bLen, 0, bs, 0, bLen.Length);
+                Array.Copy(bsData, 0, bs, 4, bsData.Length);
+
+                return bs;
+            }
+        }
+
 
     }
 
@@ -215,7 +306,7 @@ namespace JWNetwork
         /// </summary>
         /// <param name="functionName">註冊的功能名稱</param>
         /// <param name="datas">資料</param>
-        public delegate void OnRPCEvent(string functionName, Dictionary<string, string> datas);
+        public delegate void OnRPCEvent(string functionName, Hashtable datas);
 
         /// <summary>
         /// 連線成功的事件
@@ -269,7 +360,8 @@ namespace JWNetwork
         #region C2S 
 
         public string c2s_functionName;
-        public Dictionary<string, string> c2s_data = new Dictionary<string, string>();
+        
+        public Hashtable c2s_data = new Hashtable();
 
         #endregion
 
@@ -279,7 +371,7 @@ namespace JWNetwork
         public string s2c_functionName;
 
 
-        public virtual void OnRPCEvent(Dictionary<string, string> datas)
+        public virtual void OnRPCEvent(Hashtable datas)
         {
 
         }
@@ -293,7 +385,7 @@ namespace JWNetwork
         /// </summary>
         /// <param name="functionName"></param>
         /// <param name="datas"></param>
-        public virtual void OnRPCEvent(string functionName, Dictionary<string, string> datas)
+        public virtual void OnRPCEvent(string functionName, Hashtable datas)
         {
             if (!string.IsNullOrEmpty(this.s2c_functionName) && this.s2c_functionName.Equals(functionName))
             {
@@ -352,7 +444,7 @@ namespace JWNetwork
         /// </summary>
         /// <param name="functionName">功能名稱</param>
         /// <param name="data">資料</param>
-        public void Send(string functionName, Dictionary<string,string> data)
+        public void Send(string functionName, Hashtable data)
         {
             if (client == null)
                 return;

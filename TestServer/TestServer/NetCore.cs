@@ -34,7 +34,11 @@ namespace JWNetwork
         /// 封包只有 Data 的部份
         /// Send 
         /// </summary>
-        Data
+        Data , 
+        /// <summary>
+        /// 封包為 封包長度(4bytes) + 資料
+        /// </summary>
+        Len4BAndData
     }
 
     public class Packet
@@ -189,6 +193,20 @@ namespace JWNetwork
                 return bs;
             }
 
+        }
+
+        public byte[] Len4BData
+        {
+            get
+            {
+                byte[] bs = new byte[/*len*/ 4 +  /*data*/ bsData.Length];
+
+                byte[] bLen = BitConverter.GetBytes(this.packetLen);
+                Array.Copy(bLen, 0, bs, 0, bLen.Length);
+                Array.Copy(bsData, 0, bs, 4, bsData.Length);
+
+                return bs;
+            }
         }
 
 

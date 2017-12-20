@@ -21,13 +21,20 @@ public class JWNetworkController : MonoBehaviour
 
 
 
+
+
     private Login login = new Login();
+    private Registered regist = new Registered();
 
     // 因為不能跨執行緒變更UI , 所以採用變更變數值,UI執行緒判段值不為空時才更新UI內容
     private string txtStatus = "";
 
     private void init()
     {
+        // 指定 封包樣式
+        loginServer.packetType = PacketType.Len4BAndData;
+        
+
         // setup login server connect event
         loginServer.onConnected = () =>
         {
@@ -41,12 +48,22 @@ public class JWNetworkController : MonoBehaviour
         };
 
         // setup net event of login server
+        // login 
         loginServer.RegRPCEvent(login, "C2S_Login", "S2C_Login");
-        login.onLoginResult += s =>
+        login.onLoginResult = s =>
         {
             Debug.Log(s);
             txtStatus = "Login Result\n" + s;
         };
+
+        // registed
+        loginServer.RegRPCEvent(regist, "registered", "registered");
+        regist.onS2CResult = s =>
+        {
+            Debug.Log(s);
+            txtStatus = "registered Result\n" + s;
+        };
+
 
         //
         Debug.Log("Init JWNetwork ... OK");
@@ -103,5 +120,29 @@ public class JWNetworkController : MonoBehaviour
         // 發送封包
         login.ExecuteC2SEvent(true);
         //Debug.Log("Login .. end");
+    }
+
+
+    public Text txt_regist_Name;
+    public Text txt_regist_Password;
+    public Text txt_regist_Email;
+
+
+    public void Registed()
+    {
+        regist.nickName = "kevin";
+        regist.pwd = "123";
+
+        if (txt_regist_Name != null)
+            regist.nickName = txt_regist_Name.text;
+
+        if (txt_regist_Password != null)
+            regist.pwd = txt_regist_Password.text;
+
+        if (txt_regist_Email != null)
+            regist.email = txt_regist_Email.text;
+
+        regist.MakeC2SData();
+        regist.ExecuteC2SEvent(true);
     }
 }

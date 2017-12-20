@@ -138,7 +138,7 @@
             this.txt_Port.Name = "txt_Port";
             this.txt_Port.Size = new System.Drawing.Size(81, 25);
             this.txt_Port.TabIndex = 5;
-            this.txt_Port.Text = "8000";
+            this.txt_Port.Text = "9091";
             // 
             // txt_IP
             // 
@@ -147,7 +147,7 @@
             this.txt_IP.Name = "txt_IP";
             this.txt_IP.Size = new System.Drawing.Size(133, 25);
             this.txt_IP.TabIndex = 6;
-            this.txt_IP.Text = "192.168.1.106";
+            this.txt_IP.Text = "104.155.203.129";
             // 
             // label3
             // 
@@ -459,6 +459,9 @@
             this.txt_json.Name = "txt_json";
             this.txt_json.Size = new System.Drawing.Size(281, 120);
             this.txt_json.TabIndex = 6;
+            this.txt_json.Text = "{\r\n    \"status\":0,\r\n    \"msg\":\"ok\",\r\n    \"data\":\r\n    {\r\n        \"friends\":\r\n    " +
+    "    [\r\n            {\"id\":1, \"name\":\"night\"},\r\n            {\"id\":3, \"name\":\"tom\"}" +
+    "\r\n        ]\r\n    }\r\n}";
             // 
             // Form1
             // 

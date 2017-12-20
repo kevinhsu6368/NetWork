@@ -8,7 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Policy;
 using System.Windows.Forms.Layout;
-using LitJson;
+ 
 
 
 namespace JWNetwork
@@ -83,6 +83,35 @@ namespace JWNetwork
                     byte [] p = client.lsRecvBytes.Dequeue();
 
                     #region 沒有封包頭的封包格式 json-utf8
+
+                    if (client.packetType == PacketType.Len4BAndData)
+                    {
+                        int _dataSize = System.BitConverter.ToInt32(p, 0);
+                        _dataSize = IPAddress.NetworkToHostOrder(_dataSize);
+                        string json = Encoding.UTF8.GetString(p,4,_dataSize);
+                        int maxLen = 200;
+                        if (json.Length > maxLen)
+                        {
+                            Console.WriteLine(json.Substring(0, maxLen) + " ... ");
+                        }
+                        else
+                        {
+                            Console.WriteLine(json);
+                        }
+
+                        
+                        Hashtable hPacket =  (Hashtable)MiniJSON.jsonDecode(json);
+
+                        string function = hPacket["methodName"].ToString();
+
+                        Hashtable hData = (Hashtable)hPacket["paramObject"];
+
+
+                        NetEvent.OnRPCEvent callBack = client.lsRPCEvent[function];
+
+                        if (callBack != null)
+                            callBack(function, hData);
+                    }
                     if (client.packetType == PacketType.Data)  
                     {
                         string json = Encoding.UTF8.GetString(p);
@@ -98,21 +127,22 @@ namespace JWNetwork
                         
 
                         // parser json 
-                        JsonData jObj = JsonMapper.ToObject(json);
-                        
+                        //JsonData jObj = JsonMapper.ToObject(json);
+                        Hashtable data = (Hashtable)MiniJSON.jsonDecode(json);
+                        string function = data["methodName"].ToString();
 
-                        string[] lsLines = json.Replace("\r\n", "\n").Split('\n');
-                        string function = jObj["Function"].ToString();
-                        Dictionary<string, string> data = new Dictionary<string, string>();
-                        foreach (KeyValuePair<string, JsonData> v in jObj)
-                        {
-                            if(v.Key == "Function")
-                                continue;
+                        //string[] lsLines = json.Replace("\r\n", "\n").Split('\n');
+                        //string function = jObj["Function"].ToString();
+                        //Hashtable data = new Hashtable();
+                        //foreach (KeyValuePair<string, JsonData> v in jObj)
+                        //{
+                        //    if(v.Key == "Function")
+                        //        continue;
 
-                            string key = v.Key;
-                            string value = v.Value.IsString ? v.Value.ToString() : ""; // 先轉一層
-                            data.Add(key, value);
-                        }
+                        //    string key = v.Key;
+                        //    string value = v.Value.IsString ? v.Value.ToString() : ""; // 先轉一層
+                        //    data.Add(key, value);
+                        //}
 
 
                         NetEvent.OnRPCEvent callBack = client.lsRPCEvent[function];
@@ -268,6 +298,10 @@ namespace JWNetwork
             {
                 Send(p.bsData);
             }
+            if (this.packetType == PacketType.Len4BAndData)
+            {
+                Send(p.Len4BData);
+            }
             else if (this.packetType == PacketType.HeaderAndData)
             {
                 Send(p.FullData);
@@ -293,7 +327,7 @@ namespace JWNetwork
         /// </summary>
         /// <param name="function">功能名稱</param>
         /// <param name="data">資料</param>
-        public void SendRPC(string function, Dictionary<string, string> data)
+        public void SendRPC(string function, Hashtable data)
         {
             //Dictionary<string,string > loginData = new Dictionary<string, string>();
             //loginData.Add("Name","Kevin");

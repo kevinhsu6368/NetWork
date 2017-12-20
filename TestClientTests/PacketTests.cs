@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,8 @@ namespace JWNetwork.Tests
         [TestMethod()]
         public void RPCJson_PacketTest()
         {
-            Dictionary<string, string> datas = new Dictionary<string, string>();
+            //Dictionary<string, string> datas = new Dictionary<string, string>();
+            Hashtable datas = new Hashtable();
             datas.Add("Account", "Kevin");
             datas.Add("CheckPassword", "true");
             datas.Add("Password", "SDB");

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,7 +50,7 @@ namespace JWNetwork
             //this.c2s_functionName = "C2S_Login";
 
             // 指定資料
-            this.c2s_data = new Dictionary<string, string>();
+            this.c2s_data = new Hashtable();
             this.c2s_data.Add("Account", Account);
             this.c2s_data.Add("CheckPassword", "true");
             this.c2s_data.Add("Password", Password);
@@ -60,11 +61,11 @@ namespace JWNetwork
 
 
 
-        public override void OnRPCEvent(Dictionary<string, string> datas)
+        public override void OnRPCEvent(Hashtable datas)
         {
             try
             {
-                string err = datas["ErrorCord"];
+                string err = datas["ErrorCord"].ToString();
                 if (err == "00000000")
                 {
                     if (onLoginResult != null)

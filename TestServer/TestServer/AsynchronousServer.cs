@@ -111,7 +111,7 @@ namespace JWNetwork
 
         /// 封包樣式
         /// </summary>
-        public PacketType packetType = PacketType.Data;
+        public PacketType packetType = PacketType.Len4BAndData;
 
 
         public void Start(int acceptSize, int bindPort)
@@ -211,6 +211,10 @@ namespace JWNetwork
             if (this.packetType == PacketType.Data)
             {
                 Send(c,p.bsData);
+            }
+            if (this.packetType == PacketType.Len4BAndData)
+            {
+                Send(c, p.Len4BData);
             }
             else if (this.packetType == PacketType.HeaderAndData)
             {
@@ -383,7 +387,7 @@ namespace JWNetwork
         public void Send(Client c, String data)
         {
             // Convert the string data to byte data using ASCII encoding.  
-            byte[] byteData = Encoding.Unicode.GetBytes(data);
+            byte[] byteData = Encoding.UTF8.GetBytes(data);
 
             Send(c, byteData);
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -26,10 +27,11 @@ namespace TestClient
 
         Login login = new Login();
         ForgetPassword forget = new ForgetPassword();
-        
+        Registered registered = new Registered();
 
         private void Init()
         {
+            c.packetType = PacketType.Len4BAndData;
             c.onConnected = OnConnected;
             c.onDisconnected = OnDisconnected;
             c.onConnecteTimeout = OnConnecteTimeout;
@@ -43,6 +45,10 @@ namespace TestClient
 
             c.RegRPCEvent(forget, "C2S_ForgetPassword", "S2C_ForgetPassword");
             forget.onS2CResult = s => { this.label_forget.Text = s; };
+
+
+            c.RegRPCEvent(registered, "registered", "registered");
+            
 
 
         }
@@ -116,7 +122,8 @@ namespace TestClient
 
         private void btn_regist_Click(object sender, EventArgs e)
         {
-
+            registered.MakeC2SData();
+            registered.ExecuteC2SEvent(true);
         }
 
         private void btn_forget_Click(object sender, EventArgs e)
@@ -128,6 +135,8 @@ namespace TestClient
 
         private void btn_sendJSON_Click(object sender, EventArgs e)
         {
+            Hashtable h = (Hashtable)MiniJSON.jsonDecode(txt_json.Text);
+
             c.Send(txt_json.Text);
         }
     }

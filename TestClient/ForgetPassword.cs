@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,17 +18,17 @@ namespace TestClient
 
         public override void MakeC2SData()
         {
-            this.c2s_data = new Dictionary<string, string>();
+            this.c2s_data = new Hashtable();
             this.c2s_data.Add("Account", Account);
             base.MakeC2SData();
         }
  
 
-        public override void OnRPCEvent(Dictionary<string, string> datas)
+        public override void OnRPCEvent(Hashtable datas)
         {
             base.OnRPCEvent(datas);
 
-            string err = datas["ErrorCord"];
+            string err = datas["ErrorCord"].ToString();
 
             if (onS2CResult != null)
                 onS2CResult("forget Passwork Result : " + err);
