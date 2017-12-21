@@ -53,7 +53,9 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImageMGR.cs" />
     <Compile Include="ITest.cs" />
+    <Compile Include="MiniJSON.cs" />
     <Compile Include="NetCore.cs" />
     <Compile Include="ProcLogin.cs" />
     <Compile Include="Program.cs" />

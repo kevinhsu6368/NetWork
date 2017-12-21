@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-//using System.Threading.Tasks;
-using JWNetwork;
 
-namespace TestClient
+ 
+
+namespace JWNetwork
 {
     public class Login : NetEventBase
     {
@@ -65,7 +65,9 @@ namespace TestClient
         {
             try
             {
-                string err = datas["ErrorCord"].ToString();
+                
+
+                string err = datas["ErrorCode"].ToString();
                 if (err == "00000000")
                 {
                     if (onLoginResult != null)
@@ -75,10 +77,24 @@ namespace TestClient
                 }
                 else
                 {
-                    if (onLoginResult != null)
-                        onLoginResult("Login Fail > <|||");
 
-                    Console.WriteLine("Login Fail > <|||");
+                    if (datas.Contains("Photo"))
+                    {
+                        if (onLoginResult != null)
+                            onLoginResult("Photo:" + datas["Photo"]);
+                    }
+                    else
+                    {
+
+
+                        if (onLoginResult != null)
+                            onLoginResult("Login Fail > <|||");
+
+                        Console.WriteLine("Login Fail > <|||");
+                    }
+ 
+
+                    
                 }
             }
             catch (Exception e)

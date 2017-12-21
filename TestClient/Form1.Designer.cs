@@ -67,9 +67,11 @@
             this.txt_forget_password = new System.Windows.Forms.TextBox();
             this.btn_forget = new System.Windows.Forms.Button();
             this.txt_json = new System.Windows.Forms.TextBox();
+            this.pic_avartar = new System.Windows.Forms.PictureBox();
             this.gbx_login.SuspendLayout();
             this.gbx_register.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_avartar)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_start
@@ -215,6 +217,7 @@
             // 
             // gbx_login
             // 
+            this.gbx_login.Controls.Add(this.pic_avartar);
             this.gbx_login.Controls.Add(this.label5);
             this.gbx_login.Controls.Add(this.label_login_status);
             this.gbx_login.Controls.Add(this.label4);
@@ -463,6 +466,14 @@
     "    [\r\n            {\"id\":1, \"name\":\"night\"},\r\n            {\"id\":3, \"name\":\"tom\"}" +
     "\r\n        ]\r\n    }\r\n}";
             // 
+            // pic_avartar
+            // 
+            this.pic_avartar.Location = new System.Drawing.Point(115, 65);
+            this.pic_avartar.Name = "pic_avartar";
+            this.pic_avartar.Size = new System.Drawing.Size(93, 84);
+            this.pic_avartar.TabIndex = 10;
+            this.pic_avartar.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -484,6 +495,7 @@
             this.Controls.Add(this.btn_start);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.gbx_login.ResumeLayout(false);
             this.gbx_login.PerformLayout();
@@ -491,6 +503,7 @@
             this.gbx_register.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_avartar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -537,6 +550,7 @@
         private System.Windows.Forms.TextBox txt_forget_password;
         private System.Windows.Forms.Button btn_forget;
         private System.Windows.Forms.TextBox txt_json;
+        private System.Windows.Forms.PictureBox pic_avartar;
     }
 }
 

@@ -65,7 +65,9 @@ namespace JWNetwork
         {
             try
             {
-                string err = datas["ErrorCord"].ToString();
+                
+
+                string err = datas["ErrorCode"].ToString();
                 if (err == "00000000")
                 {
                     if (onLoginResult != null)
@@ -75,10 +77,24 @@ namespace JWNetwork
                 }
                 else
                 {
-                    if (onLoginResult != null)
-                        onLoginResult("Login Fail > <|||");
 
-                    Console.WriteLine("Login Fail > <|||");
+                    if (datas.Contains("Photo"))
+                    {
+                        if (onLoginResult != null)
+                            onLoginResult("Photo:" + datas["Photo"]);
+                    }
+                    else
+                    {
+
+
+                        if (onLoginResult != null)
+                            onLoginResult("Login Fail > <|||");
+
+                        Console.WriteLine("Login Fail > <|||");
+                    }
+ 
+
+                    
                 }
             }
             catch (Exception e)

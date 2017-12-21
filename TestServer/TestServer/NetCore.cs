@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -132,41 +133,19 @@ namespace JWNetwork
         }
 
 
-        public Packet(string functionName, Dictionary<string, string> datas, byte control)
+        public Packet(string functionName, Hashtable datas, byte control)
         {
-            // {
-            //   "function":"Login" , 
-            //   "Data": 
-            //   [
-            //     "Name":"Kevin",
-            //     "Pwd":"12345"
-            //   ]
-            // 
-            // }
-
+ 
             this.dataType = 0x01;
             this.dataControl = control;
 
 
-            string jsonStart = "{\r\n" +
-                               "  \"Function\":\"" + functionName + "\",\r\n";
-
-            string jsonData = "";
-            int index = 1;
-            foreach (var v in datas)
-            {
-                string next = (index == datas.Count && datas.Count != 1) ? "\r\n" : ",\r\n";
-
-
-                jsonData += string.Format("  \"{0}\":\"{1}\"{2}", v.Key, v.Value, next);
-
-                index++;
-            }
-
-            string jsonEnd = "}";
-
-            string str = jsonStart + jsonData + jsonEnd;
-            byte[] bsJsonData = Encoding.UTF8.GetBytes(str);
+            Hashtable _ht = new Hashtable();
+            _ht.Add("methodName", functionName);
+            _ht.Add("paramObject", datas);
+            string _json = MiniJSON.jsonEncode(_ht);
+ 
+            byte[] bsJsonData = Encoding.UTF8.GetBytes(_json);
 
             this.bsData = new byte[bsJsonData.Length];
 
@@ -200,8 +179,8 @@ namespace JWNetwork
             get
             {
                 byte[] bs = new byte[/*len*/ 4 +  /*data*/ bsData.Length];
-
-                byte[] bLen = BitConverter.GetBytes(this.packetLen);
+                int arrayLength = System.Net.IPAddress.HostToNetworkOrder(bsData.Length);
+                byte[] bLen = BitConverter.GetBytes(arrayLength);
                 Array.Copy(bLen, 0, bs, 0, bLen.Length);
                 Array.Copy(bsData, 0, bs, 4, bsData.Length);
 
@@ -222,7 +201,7 @@ namespace JWNetwork
 
         public delegate void OnRawEvent(AsynchronousServer.Client client, UInt16 msgID, byte[] datas);
 
-        public delegate void OnRPCEvent(AsynchronousServer.Client client,string functionName, Dictionary<string, string> datas);
+        public delegate void OnRPCEvent(AsynchronousServer.Client client,string functionName, Hashtable datas);
         
 
         public delegate void OnConnected();
@@ -247,7 +226,7 @@ namespace JWNetwork
         public NetEventBase()
         {
             onRawEvent = OnRawEvent;
-            onRpcEvent = onRpcEvent;
+            onRpcEvent = OnRPCEvent;
         }
 
         public AsynchronousServer server;
@@ -255,7 +234,7 @@ namespace JWNetwork
         public NetEvent.OnRawEvent onRawEvent;
         public NetEvent.OnRPCEvent onRpcEvent;
 
-        public virtual void OnRPCEvent(AsynchronousServer.Client client, string functionName, Dictionary<string, string> datas)
+        public virtual void OnRPCEvent(AsynchronousServer.Client client, string functionName, Hashtable datas)
         {
             
         }
@@ -282,7 +261,7 @@ namespace JWNetwork
         }
 
 
-        public void Send(AsynchronousServer.Client client , string functionName, Dictionary<string, string> data)
+        public void Send(AsynchronousServer.Client client , string functionName, Hashtable data)
         {
             if (server == null)
                 return;

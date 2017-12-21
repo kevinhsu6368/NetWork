@@ -26,6 +26,14 @@ namespace JWNetwork
         // Receive buffer.  
         public byte[] buffer = new byte[BufferSize];
 
+
+        // 每次讀取封包 區塊長度
+        public int blockSize = 1024*10 ;
+  
+
+    // 用於 TCP : len + Data 
+    public int offset = 0;
+
         // Received data string.  
         public StringBuilder sb = new StringBuilder();
     }
@@ -81,6 +89,7 @@ namespace JWNetwork
                 try
                 {
                     byte [] p = client.lsRecvBytes.Dequeue();
+                    Console.WriteLine("Read Packet " + p.Length.ToString() + " bytes at : " + DateTime.Now.ToString("HH:mm:ss.fff"));
 
                     #region 沒有封包頭的封包格式 json-utf8
 
@@ -99,8 +108,9 @@ namespace JWNetwork
                             Console.WriteLine(json);
                         }
 
-                        
+                        Console.WriteLine("json Decode [ start ] at : " + DateTime.Now.ToString("HH:mm:ss.fff"));
                         Hashtable hPacket =  (Hashtable)MiniJSON.jsonDecode(json);
+                        Console.WriteLine("json Decode [  end  ] at : " + DateTime.Now.ToString("HH:mm:ss.fff"));
 
                         string function = hPacket["methodName"].ToString();
 
@@ -436,7 +446,7 @@ namespace JWNetwork
                 state.workSocket = client;
 
                 // Begin receiving the data from the remote device.  
-                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                client.BeginReceive(state.buffer, 0, state.blockSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
             }
             catch (Exception e)
@@ -459,14 +469,18 @@ namespace JWNetwork
                 // Read data from the remote device.  
                 int bytesRead = client.EndReceive(ar);
 
+                Console.WriteLine("Read " + bytesRead.ToString() + " bytes at : " + DateTime.Now.ToString("HH:mm:ss.fff"));
+
                 if (bytesRead > 0)
                 {
-                    // There might be more data, so store the data received so far.  
-                    state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
+                    
+                    
 
                     // 檢查是否有結束符號 0x04
                     if (this.packetType == PacketType.Data)
                     {
+                        state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
+
                         string str = state.sb.ToString();
                         int procFInishPacketLen = 0;
                         if (str.Contains("\u0004"))
@@ -497,9 +511,69 @@ namespace JWNetwork
 
                         }
                     }
+                    if (this.packetType == PacketType.Len4BAndData)
+                    {
+                        state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
+
+                        byte[] bsRead = new byte[bytesRead];
+                        Array.Copy(state.buffer, state.offset, bsRead, 0, bytesRead);
+                        state.offset += bytesRead;
+
+                        // 判斷是否有完整封包
+                        while (true)
+                        {
+                            byte[] p = state.buffer;
+                            int _dataSize = System.BitConverter.ToInt32(p, 0);
+                            _dataSize = IPAddress.NetworkToHostOrder(_dataSize);
+
+                            if (_dataSize == 0)
+                            {
+                                break;
+                            }
+                            // 有一個完整的封包
+                            else if ((state.offset - 4) >=_dataSize  )
+                            {
+
+
+
+                                // 下一個完整封包
+                                byte [] nextPacket = new byte[StateObject.BufferSize];
+                                Array.Copy(state.buffer, state.offset, nextPacket,0,StateObject.BufferSize- state.offset);
+
+
+                                // 目前完整封包 (等回放到容器裡,等待處理)
+                                byte[] fullPacket = new byte[state.offset];
+                                Array.Copy(state.buffer, 0, fullPacket, 0, state.offset);
+
+
+                                // 將下一個處理封包移到最前端
+                                Array.Copy(nextPacket, 0, state.buffer, 0, StateObject.BufferSize);
+
+
+                                // 已收第一個完整封包 , 放到容器裡,等待處理
+                                this.lsRecvBytes.Enqueue(fullPacket);
+                                state.offset = 0;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            
+                        }
+
+
+                        //Console.WriteLine("Read Raw Data = " + StringTools.Bin2Hex(bsRead));
+
+                        // Get the rest of the data.  
+                        client.BeginReceive(state.buffer, state.offset, state.blockSize, 0,
+                            new AsyncCallback(ReceiveCallback), state);
+                    }
                     else
                     {
-                         byte[] bsRead = new byte[bytesRead];
+                        state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
+
+
+                        byte[] bsRead = new byte[bytesRead];
                         Array.Copy(state.buffer, 0, bsRead, 0, bytesRead);
 
                         this.lsRecvBytes.Enqueue(bsRead);

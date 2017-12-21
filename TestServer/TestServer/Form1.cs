@@ -103,8 +103,7 @@ namespace TestServer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Type t = typeof(IBullHunterPlayer);
-            PropertyInfo [] ps = t.GetProperties();
+           ImageMGR.Inst.Init();
         }
 
         private void btn_responseLogin_Click(object sender, EventArgs e)

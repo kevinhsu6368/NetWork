@@ -356,6 +356,7 @@ namespace JWNetwork
         public AsynchronousClient client;
         public NetEvent.OnRawEvent onRawEvent;
         public NetEvent.OnRPCEvent onRpcEvent;
+        public Action<string> onS2CResult;
 
         #region C2S 
 
@@ -376,6 +377,12 @@ namespace JWNetwork
 
         }
 
+        public void S2CResult(string msg)
+        {
+            if (this.onS2CResult != null)
+                this.onS2CResult(msg);
+        }
+
         #endregion
 
 
@@ -387,9 +394,14 @@ namespace JWNetwork
         /// <param name="datas"></param>
         public virtual void OnRPCEvent(string functionName, Hashtable datas)
         {
+            Console.WriteLine("OnRPCEvent : " + functionName + " at : " + DateTime.Now.ToString("HH:mm:ss.fff"));
             if (!string.IsNullOrEmpty(this.s2c_functionName) && this.s2c_functionName.Equals(functionName))
             {
                 OnRPCEvent(datas);
+            }
+            else
+            {
+                
             }
 
         }
@@ -410,6 +422,11 @@ namespace JWNetwork
         public virtual void MakeC2SData()
         {
             
+        }
+
+        public void MakeC2SData(Hashtable data)
+        {
+            this.c2s_data = data;
         }
 
         /// <summary>

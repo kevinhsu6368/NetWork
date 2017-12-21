@@ -59,6 +59,7 @@
     <Compile Include="AsynchronousClient.cs" />
     <Compile Include="ForgetPassword.cs" />
     <Compile Include="Registered.cs" />
+    <Compile Include="StringTools.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

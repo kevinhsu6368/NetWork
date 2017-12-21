@@ -394,9 +394,14 @@ namespace JWNetwork
         /// <param name="datas"></param>
         public virtual void OnRPCEvent(string functionName, Hashtable datas)
         {
+            Console.WriteLine("OnRPCEvent : " + functionName + " at : " + DateTime.Now.ToString("HH:mm:ss.fff"));
             if (!string.IsNullOrEmpty(this.s2c_functionName) && this.s2c_functionName.Equals(functionName))
             {
                 OnRPCEvent(datas);
+            }
+            else
+            {
+                
             }
 
         }

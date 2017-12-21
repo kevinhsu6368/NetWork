@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -67,7 +68,7 @@ namespace JWNetwork
                         // parser json 
                         string[] lsLines = json.Replace("\r\n", "\n").Replace("\n","").Split(',');
                         string function = "";
-                        Dictionary<string,string> data = new Dictionary<string, string>();
+                        Hashtable data = new Hashtable();
                         foreach (var line in lsLines)
                         {
                             string[] ss = line.Replace("\"","").Split(':');
@@ -92,9 +93,34 @@ namespace JWNetwork
       
 
                     }
-                    else if (server.packetType == PacketType.HeaderAndData)
+                    else if (server.packetType == PacketType.Len4BAndData)
                     {
-                        
+                        byte[] bs = p.data;
+                        int _dataSize = System.BitConverter.ToInt32(bs, 0);
+                        _dataSize = IPAddress.NetworkToHostOrder(_dataSize);
+                        string json = Encoding.UTF8.GetString(bs, 4, _dataSize);
+                        int maxLen = 200;
+                        if (json.Length > maxLen)
+                        {
+                            Console.WriteLine(json.Substring(0, maxLen) + " ... ");
+                        }
+                        else
+                        {
+                            Console.WriteLine(json);
+                        }
+
+
+                        Hashtable hPacket = (Hashtable)MiniJSON.jsonDecode(json);
+
+                        string function = hPacket["methodName"].ToString();
+
+                        Hashtable hData = (Hashtable)hPacket["paramObject"];
+
+
+                        NetEvent.OnRPCEvent callBack = server.lsRPCEvent[function];
+                        if (callBack != null)
+                            callBack(c, function, hData);
+
                     }
 
 
@@ -142,7 +168,7 @@ namespace JWNetwork
                 }
                 catch (Exception ex)
                 {
-                    
+                    Console.WriteLine(ex.Message+"\r\n"+ex.StackTrace);
                 }
 
             }
@@ -185,6 +211,7 @@ namespace JWNetwork
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message + "\r\n" + ex.StackTrace);
                 return false;
             }
             return true;
@@ -200,6 +227,7 @@ namespace JWNetwork
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message + "\r\n" + ex.StackTrace);
                 return false;
             }
             return true;
@@ -239,9 +267,9 @@ namespace JWNetwork
         /// </summary>
         /// <param name="function"></param>
         /// <param name="data"></param>
-        public void SendRPC(Client c,string function, Dictionary<string, string> data)
+        public void SendRPC(Client c,string function, Hashtable data)
         {
-            //Dictionary<string,string > loginData = new Dictionary<string, string>();
+            //Dictionary<string,string > loginData = new Hashtable();
             //loginData.Add("Name","Kevin");
             //loginData.Add("Pwd", "12345");
             //SendRPC("Login", loginData);
@@ -312,7 +340,7 @@ namespace JWNetwork
                 }
                 catch (Exception ex)
                 {
-                    
+                    Console.WriteLine(ex.Message + "\r\n" + ex.StackTrace);
                 }
                 
             }

@@ -81,8 +81,13 @@ public class JWNetworkController : MonoBehaviour
     {
         // 因為不能跨執行緒變更UI , 所以採用變更變數值,UI執行緒判段值不為空時才更新UI內容
         if (txtStatus != "" && txt_status_value != null)
-	    {
-	        txt_status_value.text = txtStatus;
+        {
+            int maxLen = 200;
+	        if (txtStatus.Length > maxLen)
+	        {
+	            txtStatus = txtStatus.Substring(0, maxLen);
+	        }
+            txt_status_value.text = txtStatus;
             txtStatus = "";
 
 	    }

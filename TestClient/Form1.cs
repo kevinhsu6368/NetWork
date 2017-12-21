@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 //using System.Threading.Tasks;
@@ -55,7 +56,26 @@ namespace TestClient
 
         private void OnLoginResult(string s)
         {
-            this.label_login_status.Text = s;
+            
+            Console.WriteLine("OnLoginResult in Form1 at : " + DateTime.Now.ToString("HH:mm:ss.fff"));
+
+            if (s.Contains("Photo:"))
+            {
+                this.label_login_status.Text = "Get Photo";
+                string[] ss = s.Split(':');
+                byte[] bs = StringTools.HexStringToByteArray(ss[1]);
+                MemoryStream ms = new MemoryStream(bs);
+
+                Image bmp = Bitmap.FromStream(ms);
+                this.pic_avartar.Image = bmp;
+                this.pic_avartar.SizeMode = PictureBoxSizeMode.Zoom;
+
+                ms.Close();
+            }
+            else
+            {
+                this.label_login_status.Text = s;
+            }
         }
 
         private void OnDisconnected(string flag)
@@ -137,7 +157,19 @@ namespace TestClient
         {
             Hashtable h = (Hashtable)MiniJSON.jsonDecode(txt_json.Text);
 
+            Hashtable obj = (Hashtable)h["data"];//["friends"];
+            ArrayList ss = (ArrayList)obj["friends"];
+            foreach (Hashtable v in ss)
+            {
+                string id = v["id"].ToString();
+                string name = v["name"].ToString();
+            }
             c.Send(txt_json.Text);
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            c.Stop();
         }
     }
 }
