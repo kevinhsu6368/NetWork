@@ -65,7 +65,14 @@ namespace JWNetwork
         {
             try
             {
-                
+                if (datas == null)
+                {
+                    if (onLoginResult != null)
+                        onLoginResult("Login fail !!!");
+
+                    Console.WriteLine("Login fail !!! ");
+                    return;
+                }
 
                 string err = datas["ErrorCode"].ToString();
                 if (err == "00000000")

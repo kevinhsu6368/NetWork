@@ -44,6 +44,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.gbx_login = new System.Windows.Forms.GroupBox();
+            this.pic_avartar = new System.Windows.Forms.PictureBox();
             this.label_login_status = new System.Windows.Forms.Label();
             this.gbx_register = new System.Windows.Forms.GroupBox();
             this.rbn_sex_unknow = new System.Windows.Forms.RadioButton();
@@ -67,11 +68,12 @@
             this.txt_forget_password = new System.Windows.Forms.TextBox();
             this.btn_forget = new System.Windows.Forms.Button();
             this.txt_json = new System.Windows.Forms.TextBox();
-            this.pic_avartar = new System.Windows.Forms.PictureBox();
+            this.label_s2c_error = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             this.gbx_login.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_avartar)).BeginInit();
             this.gbx_register.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pic_avartar)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_start
@@ -154,7 +156,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(24, 105);
+            this.label3.Location = new System.Drawing.Point(28, 104);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(75, 12);
             this.label3.TabIndex = 9;
@@ -163,7 +165,7 @@
             // label_connect_status
             // 
             this.label_connect_status.AutoSize = true;
-            this.label_connect_status.Location = new System.Drawing.Point(116, 105);
+            this.label_connect_status.Location = new System.Drawing.Point(114, 104);
             this.label_connect_status.Name = "label_connect_status";
             this.label_connect_status.Size = new System.Drawing.Size(17, 12);
             this.label_connect_status.TabIndex = 10;
@@ -230,6 +232,14 @@
             this.gbx_login.TabIndex = 11;
             this.gbx_login.TabStop = false;
             this.gbx_login.Text = "Login : ";
+            // 
+            // pic_avartar
+            // 
+            this.pic_avartar.Location = new System.Drawing.Point(115, 65);
+            this.pic_avartar.Name = "pic_avartar";
+            this.pic_avartar.Size = new System.Drawing.Size(93, 84);
+            this.pic_avartar.TabIndex = 10;
+            this.pic_avartar.TabStop = false;
             // 
             // label_login_status
             // 
@@ -466,13 +476,23 @@
     "    [\r\n            {\"id\":1, \"name\":\"night\"},\r\n            {\"id\":3, \"name\":\"tom\"}" +
     "\r\n        ]\r\n    }\r\n}";
             // 
-            // pic_avartar
+            // label_s2c_error
             // 
-            this.pic_avartar.Location = new System.Drawing.Point(115, 65);
-            this.pic_avartar.Name = "pic_avartar";
-            this.pic_avartar.Size = new System.Drawing.Size(93, 84);
-            this.pic_avartar.TabIndex = 10;
-            this.pic_avartar.TabStop = false;
+            this.label_s2c_error.AutoSize = true;
+            this.label_s2c_error.Location = new System.Drawing.Point(318, 31);
+            this.label_s2c_error.Name = "label_s2c_error";
+            this.label_s2c_error.Size = new System.Drawing.Size(17, 12);
+            this.label_s2c_error.TabIndex = 10;
+            this.label_s2c_error.Text = "---";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(314, 13);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(60, 12);
+            this.label12.TabIndex = 9;
+            this.label12.Text = "S2C  error :";
             // 
             // Form1
             // 
@@ -482,6 +502,8 @@
             this.Controls.Add(this.gbx_register);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.gbx_login);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.label_s2c_error);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label_connect_status);
             this.Controls.Add(this.label2);
@@ -499,11 +521,11 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.gbx_login.ResumeLayout(false);
             this.gbx_login.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_avartar)).EndInit();
             this.gbx_register.ResumeLayout(false);
             this.gbx_register.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pic_avartar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -551,6 +573,8 @@
         private System.Windows.Forms.Button btn_forget;
         private System.Windows.Forms.TextBox txt_json;
         private System.Windows.Forms.PictureBox pic_avartar;
+        private System.Windows.Forms.Label label_s2c_error;
+        private System.Windows.Forms.Label label12;
     }
 }
 

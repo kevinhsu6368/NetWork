@@ -36,7 +36,7 @@ namespace TestClient
             c.onConnected = OnConnected;
             c.onDisconnected = OnDisconnected;
             c.onConnecteTimeout = OnConnecteTimeout;
-            
+            c.onS2CError = s => this.label_s2c_error.Text = s;
 
             // register rpc 
 

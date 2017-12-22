@@ -159,12 +159,15 @@ namespace JWNetwork
             if (!isRunning)
                 return ;
 
+            
             foreach (Client c in lsClient)
             {
                 try
                 {
                     c.socket.Shutdown(SocketShutdown.Both);
                     c.socket.Close();
+                    if (this.onKillClient != null)
+                        this.onKillClient(c);
                 }
                 catch (Exception ex)
                 {
@@ -176,9 +179,11 @@ namespace JWNetwork
 
             try
             {
+                //tcpServer.Server.Shutdown(SocketShutdown.Both);
+                //tcpServer.Server.Close();
                 tcpServer.Stop();
             }
-            catch (Exception ex)
+            catch (SocketException ex)
             {
                 //MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
                 Console.WriteLine(ex.Message + "\r\n" + ex.StackTrace);
@@ -302,7 +307,25 @@ namespace JWNetwork
         {
             foreach (Client c in lsClient)
             {
-                Send(c, datas);
+                if (this.packetType == PacketType.Data)
+                {
+                    Send(c, datas);
+                }
+                else if (this.packetType == PacketType.Len4BAndData)
+                {
+                    // send len
+                    int arrayLength = System.Net.IPAddress.HostToNetworkOrder(datas.Length);
+                    byte[] bLen = BitConverter.GetBytes(arrayLength);
+                    Send(c, bLen);
+
+                    // send data
+                    Send(c, datas);
+                }
+                else
+                {
+                    Send(c, datas);
+                }
+                
             }
         }
 
@@ -373,6 +396,9 @@ namespace JWNetwork
         // Process the client connection.
         public void DoAcceptSocketCallback(IAsyncResult ar)
         {
+            if (!this.isRunning)
+                return;
+
             // Get the listener that handles the client request.
             TcpListener listener = (TcpListener)ar.AsyncState;
 
@@ -380,9 +406,7 @@ namespace JWNetwork
             //console.
             try
             {
-               /// if (!listener.Server.Connected)
-               //     return;
-
+  
                 Socket clientSocket = listener.EndAcceptSocket(ar);
                 Client c = new Client(clientSocket);
                 lsClient.Add(c);
@@ -405,6 +429,10 @@ namespace JWNetwork
                 // next connecter
                 DoBeginAcceptSocket(tcpServer);
             }
+            catch (ObjectDisposedException ex)
+            {
+                Console.WriteLine(ex.Message + "\r\n" + ex.StackTrace);
+            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message + "\r\n" + ex.StackTrace);
@@ -417,7 +445,21 @@ namespace JWNetwork
             // Convert the string data to byte data using ASCII encoding.  
             byte[] byteData = Encoding.UTF8.GetBytes(data);
 
-            Send(c, byteData);
+
+            if (this.packetType == PacketType.Len4BAndData)
+            {
+                // send len
+                int arrayLength = System.Net.IPAddress.HostToNetworkOrder(byteData.Length);
+                byte[] bLen = BitConverter.GetBytes(arrayLength);
+                Send(c, bLen);
+
+                Send(c, byteData);
+            }
+            else
+            {
+                Send(c, byteData);
+            }
+            
 
 
             // Begin sending the data to the remote device.  

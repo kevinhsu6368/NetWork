@@ -13,7 +13,7 @@ namespace TestClient
 
         public string Account;
 
-        public Action<string> onS2CResult;
+       
 
 
         public override void MakeC2SData()

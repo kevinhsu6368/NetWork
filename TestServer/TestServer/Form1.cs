@@ -35,9 +35,14 @@ namespace TestServer
 
         private void btn_start_Click(object sender, EventArgs e)
         {
+            this.btn_start.Enabled = false;
+            
+
             server.Start(int.Parse(txt_max_count.Text),int.Parse(txt_Port.Text));
             server.onAcceptClient = OnAcceptClient;
             server.onKillClient = OnKillClient;
+
+            this.btn_Stop.Enabled = true;
         }
 
         private void OnKillClient(object client)
@@ -72,7 +77,10 @@ namespace TestServer
 
         private void btn_Stop_Click(object sender, EventArgs e)
         {
+            
+            this.btn_Stop.Enabled = false;
             server.Stop();
+            this.btn_start.Enabled = true;
 
         }
 
@@ -91,6 +99,7 @@ namespace TestServer
             byte[] bs = StringTools.HexStringToByteArray(txt);
             //byte[] bs = new byte[] { 0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a};
 
+            
             server.SendRawDataToAll(bs);
         }
 

@@ -353,10 +353,30 @@ namespace JWNetwork
             this.onRpcEvent = this.OnRPCEvent;
         }
 
+        /// <summary>
+        /// Client連線處理類(非同步機制)
+        /// </summary>
         public AsynchronousClient client;
+
+
+        /// <summary>
+        /// 網路通訊 S2C 過程,收到封包並觸發指定的處理事件(MSGID)
+        /// </summary>
         public NetEvent.OnRawEvent onRawEvent;
+
+
+        /// <summary>
+        /// 網路通訊 S2C 過程,收到封包並觸發指定的處理事件(RPC)
+        /// </summary>
         public NetEvent.OnRPCEvent onRpcEvent;
+
+
+        /// <summary>
+        /// 網路通訊 S2C 過程,處理結果通知事件
+        /// </summary>
         public Action<string> onS2CResult;
+
+
 
         #region C2S 
 

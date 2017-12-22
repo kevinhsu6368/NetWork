@@ -6,9 +6,7 @@ using System.Threading;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
-
-
- 
+using System.Runtime.CompilerServices;
 
 
 namespace JWNetwork
@@ -38,8 +36,10 @@ namespace JWNetwork
         public StringBuilder sb = new StringBuilder();
     }
 
-    
 
+    /// <summary>
+    /// Client連線處理類(非同步機制)
+    /// </summary>
     public class AsynchronousClient
     {
         // The port number for the remote device.  
@@ -51,11 +51,6 @@ namespace JWNetwork
         private static ManualResetEvent connectDone =
             new ManualResetEvent(false);
 
-        private static ManualResetEvent sendDone =
-            new ManualResetEvent(false);
-
-        private static ManualResetEvent receiveDone =
-            new ManualResetEvent(false);
 
         // The response from the remote device.  
         private String response = String.Empty;
@@ -97,6 +92,16 @@ namespace JWNetwork
                     {
                         int _dataSize = System.BitConverter.ToInt32(p, 0);
                         _dataSize = IPAddress.NetworkToHostOrder(_dataSize);
+                        if (_dataSize < 0) // 封包長度值無效
+                        {
+                            Console.WriteLine("Packet length error !");
+
+                            if (client.onS2CError != null)
+                                client.onS2CError("Packet length error !");
+
+                            continue;
+                        }
+
                         string json = Encoding.UTF8.GetString(p,4,_dataSize);
                         int maxLen = 200;
                         if (json.Length > maxLen)
@@ -108,14 +113,53 @@ namespace JWNetwork
                             Console.WriteLine(json);
                         }
 
-                        Console.WriteLine("json Decode [ start ] at : " + DateTime.Now.ToString("HH:mm:ss.fff"));
-                        Hashtable hPacket =  (Hashtable)MiniJSON.jsonDecode(json);
-                        Console.WriteLine("json Decode [  end  ] at : " + DateTime.Now.ToString("HH:mm:ss.fff"));
+                        Hashtable hPacket = null; ;
+                        try
+                        {
+                            Console.WriteLine("json Decode [ start ] at : " + DateTime.Now.ToString("HH:mm:ss.fff"));
+
+                            hPacket = (Hashtable) MiniJSON.jsonDecode(json);
+
+                            Console.WriteLine("json Decode [  end  ] at : " + DateTime.Now.ToString("HH:mm:ss.fff"));
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Json Decode ... error , at : " + DateTime.Now.ToString("HH:mm:ss.fff"));
+                            if (client.onS2CError != null)
+                                client.onS2CError("Json Decode ... error , at : " + DateTime.Now.ToString("HH:mm:ss.fff"));
+                            continue;
+                        }
+
+                        if (hPacket == null)
+                        {
+                            Console.WriteLine("This Packet had bad json data !!!" + DateTime.Now.ToString("HH:mm:ss.fff"));
+                            if (client.onS2CError != null)
+                                client.onS2CError("This Packet had bad json data !!!" + DateTime.Now.ToString("HH:mm:ss.fff"));
+                            continue;
+                        }
+
+                        if (hPacket.ContainsKey("methodName") == false)
+                        {
+                            Console.WriteLine("Packet - no key : \"methodName\" " + DateTime.Now.ToString("HH:mm:ss.fff"));
+                            if (client.onS2CError != null)
+                                client.onS2CError("Packet - no key : \"methodName\" " + DateTime.Now.ToString("HH:mm:ss.fff"));
+                            continue;
+                        }
 
                         string function = hPacket["methodName"].ToString();
 
-                        Hashtable hData = (Hashtable)hPacket["paramObject"];
+                        Hashtable hData = null;
 
+                        if(hPacket.ContainsKey("paramObject"))
+                            hData = (Hashtable)hPacket["paramObject"];
+
+                        if (client.lsRPCEvent.ContainsKey(function) == false)
+                        {
+                            Console.WriteLine("No RPC Event Name : [ " + function + " ] at " + DateTime.Now.ToString("HH:mm:ss.fff"));
+                            if (client.onS2CError != null)
+                                client.onS2CError("No RPC Event Name : [ " + function + " ] at " + DateTime.Now.ToString("HH:mm:ss.fff"));
+                            continue;
+                        }
 
                         NetEvent.OnRPCEvent callBack = client.lsRPCEvent[function];
 
@@ -257,6 +301,12 @@ namespace JWNetwork
 
         public NetEvent.OnConnecteTimeout onConnecteTimeout = null;
 
+        /// <summary>
+        /// 網路通訊 S2C 過程,有錯誤時觸發的事件
+        /// </summary>
+        public Action<string> onS2CError;
+
+
         public bool RegRawEvent(NetEventBase target, UInt16 msgID, NetEvent.OnRawEvent callFunc)
         {
             try
@@ -374,22 +424,22 @@ namespace JWNetwork
         /// </summary>
         public void Stop()
         {
+            if (this.client == null)
+                return;
+
             try
             {
- 
-                    this.client.Shutdown(SocketShutdown.Both);
-                    this.client.Close();
-                    //this.client.Dispose();
-                    this.client = null;
-                    if (this.onDisconnected != null)
-                        this.onDisconnected("Success");
-                    this.isRunning = false;
-
                 
+                    this.client.Shutdown(SocketShutdown.Both);
             }
-            catch (Exception e)
+            finally
             {
-                Console.WriteLine(e.Message + "\r\n" + e.StackTrace);
+                this.client.Close();
+                this.client = null;
+                if (this.onDisconnected != null)
+                    this.onDisconnected("Success");
+                this.isRunning = false;
+
             }
 
         }
@@ -434,6 +484,8 @@ namespace JWNetwork
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                if (this.onDisconnected != null)
+                    this.onDisconnected(e.Message);
             }
         }
 
@@ -452,6 +504,8 @@ namespace JWNetwork
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                if (this.onS2CError != null)
+                    this.onS2CError("Receive error" + "\r\n" + e.Message);
             }
         }
 
@@ -473,9 +527,6 @@ namespace JWNetwork
 
                 if (bytesRead > 0)
                 {
-                    
-                    
-
                     // 檢查是否有結束符號 0x04
                     if (this.packetType == PacketType.Data)
                     {
@@ -526,15 +577,21 @@ namespace JWNetwork
                             int _dataSize = System.BitConverter.ToInt32(p, 0);
                             _dataSize = IPAddress.NetworkToHostOrder(_dataSize);
 
+                            if (_dataSize > StateObject.BufferSize || _dataSize < 4 )
+                            {
+                                Console.WriteLine(string.Format("Packet Len({0}) error , Recv-buffer size( {1} ~ {2} )",_dataSize, 4,StateObject.BufferSize));
+                                // clear buffer
+                                state.buffer = new byte[StateObject.BufferSize];
+                                state.offset = 0;
+                                break;
+                            }
                             if (_dataSize == 0)
                             {
                                 break;
                             }
                             // 有一個完整的封包
-                            else if ((state.offset - 4) >=_dataSize  )
+                            else if ((state.offset - 4) >= _dataSize  )
                             {
-
-
 
                                 // 下一個完整封包
                                 byte [] nextPacket = new byte[StateObject.BufferSize];
@@ -553,6 +610,7 @@ namespace JWNetwork
                                 // 已收第一個完整封包 , 放到容器裡,等待處理
                                 this.lsRecvBytes.Enqueue(fullPacket);
                                 state.offset = 0;
+                                break;
                             }
                             else
                             {
@@ -614,20 +672,25 @@ namespace JWNetwork
 
                 // to disconnect and release 
                 this.Stop();
+                Console.WriteLine("Disconnected(SocketException)");
                 if (this.onDisconnected != null)
                     this.onDisconnected(e.Message);
 
-                Console.WriteLine(e.Message  + e.StackTrace);
+               
             }
             catch (ObjectDisposedException e)
             {
+                this.Stop();
                 Console.WriteLine(e.ToString());
+                if (this.onDisconnected != null)
+                    this.onDisconnected("Disconnected(ObjectDisposedException)");
             }
             catch (Exception e)
             {
+                this.Stop();
                 Console.WriteLine(e.ToString());
                 if (this.onDisconnected != null)
-                    this.onDisconnected("Disconnected");
+                    this.onDisconnected("Disconnected(Exception)");
             }
         }
 

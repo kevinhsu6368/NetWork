@@ -45,7 +45,7 @@ namespace TestServer
                             data.Add("ErrorCode", "1");
                             data.Add("GameServer", "");
                             
-                            int r = new Random().Next(0,3);
+                            int r = new Random().Next(0,13);
                             data.Add("Photo", ImageMGR.Inst.GetImage(r).hexData);
                             //data.Add("GameServer", "192.168.1.101:8800");
                             this.Send(client, "S2C_Login", data);
