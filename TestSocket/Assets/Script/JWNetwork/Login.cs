@@ -43,6 +43,9 @@ namespace JWNetwork
         public Action<string> onLoginResult;
 
 
+        public Action<byte[]> onLoginAvartar;
+
+
         #region 走預設 c2s 的處理流程 , 適合一個類別單一(C2S-S2C)功能
         public override void MakeC2SData()
         {
@@ -82,6 +85,11 @@ namespace JWNetwork
                     {
                         if (onLoginResult != null)
                             onLoginResult("Photo:" + datas["Photo"]);
+
+                        string sData = datas["Photo"].ToString().Replace("Photo:", "");
+                        byte [] bsData = StringTools.HexStringToByteArray(sData);
+                        if (onLoginAvartar != null)
+                            onLoginAvartar(bsData);
                     }
                     else
                     {

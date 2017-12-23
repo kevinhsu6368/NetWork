@@ -24,4 +24,26 @@ public class MoveImage : MonoBehaviour
 
 
 	}
+
+  
+    public Image img;
+     
+
+    public void ChangeTexture()
+    {
+        System.IO.FileStream fs = new System.IO.FileStream("D:\\image1.jpg", System.IO.FileMode.Open);
+        byte[] data = new byte[fs.Length];
+
+        fs.Read(data,0, (int)fs.Length);
+        fs.Close();
+
+        Texture2D t = new Texture2D(100, 100);
+        t.LoadImage(data);
+        img.sprite = Sprite.Create(t, new Rect(0, 0, t.width, t.height),Vector2.zero);
+        
+ 
+
+        
+
+    }
 }

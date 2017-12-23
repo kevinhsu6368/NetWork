@@ -9,32 +9,67 @@ public class JWNetworkController : MonoBehaviour
     private AsynchronousClient loginServer = new AsynchronousClient();
     //private AsynchronousClient gameServer = new AsynchronousClient();
 
+    /// <summary>
+    /// 登入後取得大頭貼圖像資料,並予以變更新的大頭貼
+    /// </summary>
+    public Image avatar;
 
+    /// <summary>
+    /// 變更大頭貼的位元資料(於 Update() 中取得並使用,用完清空)
+    /// </summary>
+    private byte[] bsAvatarForChange = null;
+
+    /// <summary>
+    /// 網路通訊狀態
+    /// </summary>
     public Text txt_status_value;
 
+
+    /// <summary>
+    /// 網路 登入Server IP / PORT
+    /// </summary>
     public Text txt_LoginServer_IP;
     public Text txt_loginServer_Port;
 
-
+    /// <summary>
+    /// 網路 使用者 登入帳號及密碼
+    /// </summary>
     public Text txt_Login_Account;
     public Text txt_Login_Password;
 
 
 
-
-
+    /// <summary>
+    /// 通訊處理類別 - 使用者帳號登入 
+    /// </summary>
     private Login login = new Login();
+
+
+    /// <summary>
+    /// 通訊處理類別 - 註冊使用者帳號
+    /// </summary>
     private Registered regist = new Registered();
 
-    // 因為不能跨執行緒變更UI , 所以採用變更變數值,UI執行緒判段值不為空時才更新UI內容
+    #region  因為不能跨執行緒變更UI , 所以採用變更變數值,UI執行緒判段值不為空時才更新UI內容
+    /// <summary>
+    /// 變更網路狀元資訊(用於 Update() 中取得並使用,用完清空)
+    /// </summary>
     private string txtStatus = "";
+    #endregion
 
+
+    /// <summary>
+    /// 初始化 , 指定封包格式 , 註冊 網路通訊處理類別(Login,Registed,....)
+    /// </summary>
     private void init()
     {
-        // 指定 封包樣式
-        loginServer.packetType = PacketType.Len4BAndData;
-        
+        #region 1. 指定 封包樣式
 
+        loginServer.packetType = PacketType.Len4BAndData;
+
+        #endregion
+        
+        #region 2. 註冊 網路通訊處理類別
         // setup login server connect event
         loginServer.onConnected = () =>
         {
@@ -52,8 +87,12 @@ public class JWNetworkController : MonoBehaviour
         loginServer.RegRPCEvent(login, "C2S_Login", "S2C_Login");
         login.onLoginResult = s =>
         {
-            Debug.Log(s);
+            //Debug.Log(s);
             txtStatus = "Login Result\n" + s;
+        };
+        login.onLoginAvartar = s =>
+        {
+            bsAvatarForChange = s;
         };
 
         // registed
@@ -64,8 +103,9 @@ public class JWNetworkController : MonoBehaviour
             txtStatus = "registered Result\n" + s;
         };
 
+        #endregion
 
-        //
+
         Debug.Log("Init JWNetwork ... OK");
     }
 
@@ -76,7 +116,13 @@ public class JWNetworkController : MonoBehaviour
 		
 	}
 	
-	// Update is called once per frame
+	/// <summary>
+    /// 由於網路接收資料,跟Unity-Update()走的是不同執行緒
+    /// 不能跨執行緒變更UI內容
+    /// 因此需要把網路資料存出來
+    /// 並在 Unity-Update()裡使用存出來的資料,並變更 UI 
+    /// 在變更完 UI 後,下一個 frame 前將存出來資料清空
+    /// </summary>
 	void Update ()
     {
         // 因為不能跨執行緒變更UI , 所以採用變更變數值,UI執行緒判段值不為空時才更新UI內容
@@ -92,8 +138,20 @@ public class JWNetworkController : MonoBehaviour
 
 	    }
 
+        // 使用者帳號登入時,取得大頭貼資料,設定新的大頭貼,並清空網路接收用的資料
+        if(bsAvatarForChange!=null)
+        {
+            Texture2D t = new Texture2D(100, 100);
+            t.LoadImage(bsAvatarForChange);
+            avatar.sprite = Sprite.Create(t, new Rect(0, 0, t.width, t.height), Vector2.zero);
+            bsAvatarForChange = null;
+        }
+
 	}
 
+    /// <summary>
+    /// 連接 Login Server 
+    /// </summary>
     public void ConnectLoginServer()
     {
         string ip = txt_LoginServer_IP == null ? "192.168.1.106" : txt_LoginServer_IP.text;
@@ -101,11 +159,17 @@ public class JWNetworkController : MonoBehaviour
         loginServer.Start(ip,port);
     }
 
+    /// <summary>
+    /// 關閉 Login Server
+    /// </summary>
     public void StopLoginServer()
     {
         loginServer.Stop();
     }
 
+    /// <summary>
+    /// 使用者帳號登入
+    /// </summary>
     public void Login()
     {
         //Debug.Log("Login .. start");
@@ -132,27 +196,11 @@ public class JWNetworkController : MonoBehaviour
     public Text txt_regist_Password;
     public Text txt_regist_Email;
 
-
+    /// <summary>
+    /// 使用者註冊帳號
+    /// </summary>
     public void Registed()
     {
-        /*
-        regist.nickName = "kevin";
-        regist.pwd = "123";
-
-        if (txt_regist_Name != null)
-            regist.nickName = txt_regist_Name.text;
-
-        if (txt_regist_Password != null)
-            regist.pwd = txt_regist_Password.text;
-
-        if (txt_regist_Email != null)
-            regist.email = txt_regist_Email.text;
-            
-
-        //regist.MakeC2SData();
-
-    */
-
         Hashtable data = new Hashtable();
 
         data.Add("firstName", "中文");
