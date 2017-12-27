@@ -51,10 +51,9 @@ namespace JWNetwork
 
             // 指定資料
             this.c2s_data = new Hashtable();
-            this.c2s_data.Add("Account", Account);
-            this.c2s_data.Add("CheckPassword", "true");
-            this.c2s_data.Add("Password", Password);
- 
+            this.c2s_data.Add("loginType",2);
+            this.c2s_data.Add("email", Account);
+            this.c2s_data.Add("pwd", Password);
         }
         #endregion
 
@@ -74,7 +73,31 @@ namespace JWNetwork
                     return;
                 }
 
-                string err = datas["ErrorCode"].ToString();
+                int err = int.Parse(datas["rs"].ToString());
+
+                switch (err)
+                {
+                    case 0:
+                        if (onLoginResult != null)
+                            onLoginResult("Login Successed ^ ^");
+                        break;
+                    case 1:
+                        if (onLoginResult != null)
+                            onLoginResult("Login Fail : 帳號輸入錯誤或密碼輸入錯誤 !!!");
+                        break;
+                    case 2:
+                        if (onLoginResult != null)
+                            onLoginResult("Login Fail : 錯誤的登入類型 !!!");
+                        break;
+                    case 500:
+                        if (onLoginResult != null)
+                            onLoginResult("Login Fail : Server 錯誤 !!!");
+                        break;
+                    default:
+                        break;
+                }
+
+                /*
                 if (err == "00000000")
                 {
                     if (onLoginResult != null)
@@ -103,6 +126,7 @@ namespace JWNetwork
 
                     
                 }
+                */
             }
             catch (Exception e)
             {

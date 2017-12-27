@@ -24,6 +24,7 @@ namespace TestClient
         {
             Form.CheckForIllegalCrossThreadCalls = false;
             Init();
+            ImageMGR.Inst.Init();
         }
 
         Login login = new Login();
@@ -41,15 +42,16 @@ namespace TestClient
             // register rpc 
 
             //c.RegRPCEvent(login,"S2C_Login", login.OnRPCEvent);
-            c.RegRPCEvent(login, "C2S_Login", "S2C_Login");
+            c.RegRPCEvent(login, "login_C2S", "login_S2C");
             login.onLoginResult = OnLoginResult;
 
             c.RegRPCEvent(forget, "C2S_ForgetPassword", "S2C_ForgetPassword");
             forget.onS2CResult = s => { this.label_forget.Text = s; };
 
 
-            c.RegRPCEvent(registered, "registered", "registered");
-            
+            c.RegRPCEvent(registered, "registered_C2S", "registered_S2C");
+            registered.onS2CResult = s => { this.label_register_status.Text = s; };
+
 
 
         }
@@ -133,6 +135,7 @@ namespace TestClient
         {
             login.Account = txt_login_name.Text;
             login.Password = txt_login_pwd.Text;
+            
             this.label_login_status.Text = "";
 
             login.MakeC2SData();
@@ -142,6 +145,23 @@ namespace TestClient
 
         private void btn_regist_Click(object sender, EventArgs e)
         {
+            this.label_register_status.Text = "";
+            registered.firstName = this.txt_first_name.Text;
+            registered.lastName = this.txt_last_name.Text;
+            registered.nickName = this.txt_nick_name.Text;
+            registered.birthday = string.Format("{0}-{1}-{2}", new Random().Next(1950, 2010), new Random().Next(1, 12), new Random().Next(1, 30));
+            registered.country = new Random().Next(100, 200).ToString();
+            registered.pwd = this.txt_login_pwd.Text;
+            registered.email = this.txt_email.Text;
+            if (this.rbn_sex_woman.Checked)
+                registered.gender = 0;
+            else if (this.rbn_sex_man.Checked)
+                registered.gender = 1;
+            else
+                registered.gender = 2;
+
+            registered.photo = ImageMGR.Inst.GetImage(new Random().Next(0, 10)).hexData;
+
             registered.MakeC2SData();
             registered.ExecuteC2SEvent(true);
         }

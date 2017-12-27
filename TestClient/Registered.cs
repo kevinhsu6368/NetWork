@@ -12,9 +12,9 @@ public class Registered : NetEventBase
     public string lastName;
     public string nickName;
     public string pwd;
-    public string birthday;
+    public string birthday = "2017-01-01";
     public string email;
-    public string gender;
+    public int gender = 1;
     public string country;
     public string photo;
 
@@ -22,15 +22,15 @@ public class Registered : NetEventBase
     {
 
         c2s_data = new Hashtable();
-        c2s_data.Add("firstName", "中文");
-        c2s_data.Add("lastName", "ok123");
+        c2s_data.Add("firstName", firstName);
+        c2s_data.Add("lastName", lastName);
         c2s_data.Add("nickName", nickName);
         c2s_data.Add("pwd", pwd);
-        c2s_data.Add("birthday", "2017-01-01");
+        c2s_data.Add("birthday", birthday);
         c2s_data.Add("email", email);
-        c2s_data.Add("gender", 1);
-        c2s_data.Add("country", "158");
-        c2s_data.Add("photo", 21845);
+        c2s_data.Add("gender", gender);
+        c2s_data.Add("country", country);
+        c2s_data.Add("photo", "");// photo);
 
     }
 

@@ -70,6 +70,7 @@
             this.txt_json = new System.Windows.Forms.TextBox();
             this.label_s2c_error = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
+            this.label_register_status = new System.Windows.Forms.Label();
             this.gbx_login.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pic_avartar)).BeginInit();
             this.gbx_register.SuspendLayout();
@@ -252,6 +253,7 @@
             // 
             // gbx_register
             // 
+            this.gbx_register.Controls.Add(this.label_register_status);
             this.gbx_register.Controls.Add(this.rbn_sex_unknow);
             this.gbx_register.Controls.Add(this.rbn_sex_woman);
             this.gbx_register.Controls.Add(this.rbn_sex_man);
@@ -494,6 +496,15 @@
             this.label12.TabIndex = 9;
             this.label12.Text = "S2C  error :";
             // 
+            // label_register_status
+            // 
+            this.label_register_status.AutoSize = true;
+            this.label_register_status.Location = new System.Drawing.Point(132, 85);
+            this.label_register_status.Name = "label_register_status";
+            this.label_register_status.Size = new System.Drawing.Size(14, 12);
+            this.label_register_status.TabIndex = 11;
+            this.label_register_status.Text = "...";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -575,6 +586,7 @@
         private System.Windows.Forms.PictureBox pic_avartar;
         private System.Windows.Forms.Label label_s2c_error;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label_register_status;
     }
 }
 
