@@ -47,6 +47,7 @@
             this.pic_avartar = new System.Windows.Forms.PictureBox();
             this.label_login_status = new System.Windows.Forms.Label();
             this.gbx_register = new System.Windows.Forms.GroupBox();
+            this.label_register_status = new System.Windows.Forms.Label();
             this.rbn_sex_unknow = new System.Windows.Forms.RadioButton();
             this.rbn_sex_woman = new System.Windows.Forms.RadioButton();
             this.rbn_sex_man = new System.Windows.Forms.RadioButton();
@@ -70,16 +71,41 @@
             this.txt_json = new System.Windows.Forms.TextBox();
             this.label_s2c_error = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.label_register_status = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.numericUpDown_photo_index = new System.Windows.Forms.NumericUpDown();
+            this.btn_get_user_photo = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.btn_upload_photo = new System.Windows.Forms.Button();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.button2 = new System.Windows.Forms.Button();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.button3 = new System.Windows.Forms.Button();
             this.gbx_login.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pic_avartar)).BeginInit();
             this.gbx_register.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_photo_index)).BeginInit();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_start
             // 
-            this.btn_start.Location = new System.Drawing.Point(24, 68);
+            this.btn_start.Location = new System.Drawing.Point(24, 59);
             this.btn_start.Name = "btn_start";
             this.btn_start.Size = new System.Drawing.Size(75, 23);
             this.btn_start.TabIndex = 0;
@@ -89,7 +115,7 @@
             // 
             // btn_sendJSON
             // 
-            this.btn_sendJSON.Location = new System.Drawing.Point(320, 306);
+            this.btn_sendJSON.Location = new System.Drawing.Point(340, 417);
             this.btn_sendJSON.Name = "btn_sendJSON";
             this.btn_sendJSON.Size = new System.Drawing.Size(75, 23);
             this.btn_sendJSON.TabIndex = 1;
@@ -99,7 +125,7 @@
             // 
             // btn_sendHex
             // 
-            this.btn_sendHex.Location = new System.Drawing.Point(11, 641);
+            this.btn_sendHex.Location = new System.Drawing.Point(550, 417);
             this.btn_sendHex.Name = "btn_sendHex";
             this.btn_sendHex.Size = new System.Drawing.Size(75, 23);
             this.btn_sendHex.TabIndex = 1;
@@ -110,9 +136,9 @@
             // btn_Stop
             // 
             this.btn_Stop.Enabled = false;
-            this.btn_Stop.Location = new System.Drawing.Point(107, 68);
+            this.btn_Stop.Location = new System.Drawing.Point(105, 59);
             this.btn_Stop.Name = "btn_Stop";
-            this.btn_Stop.Size = new System.Drawing.Size(75, 23);
+            this.btn_Stop.Size = new System.Drawing.Size(52, 23);
             this.btn_Stop.TabIndex = 1;
             this.btn_Stop.Text = "Stop";
             this.btn_Stop.UseVisualStyleBackColor = true;
@@ -141,7 +167,7 @@
             this.txt_Port.Location = new System.Drawing.Point(163, 28);
             this.txt_Port.Multiline = true;
             this.txt_Port.Name = "txt_Port";
-            this.txt_Port.Size = new System.Drawing.Size(81, 25);
+            this.txt_Port.Size = new System.Drawing.Size(56, 25);
             this.txt_Port.TabIndex = 5;
             this.txt_Port.Text = "9091";
             // 
@@ -157,7 +183,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(28, 104);
+            this.label3.Location = new System.Drawing.Point(24, 99);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(75, 12);
             this.label3.TabIndex = 9;
@@ -166,7 +192,7 @@
             // label_connect_status
             // 
             this.label_connect_status.AutoSize = true;
-            this.label_connect_status.Location = new System.Drawing.Point(114, 104);
+            this.label_connect_status.Location = new System.Drawing.Point(112, 99);
             this.label_connect_status.Name = "label_connect_status";
             this.label_connect_status.Size = new System.Drawing.Size(17, 12);
             this.label_connect_status.TabIndex = 10;
@@ -220,23 +246,22 @@
             // 
             // gbx_login
             // 
-            this.gbx_login.Controls.Add(this.pic_avartar);
             this.gbx_login.Controls.Add(this.label5);
             this.gbx_login.Controls.Add(this.label_login_status);
             this.gbx_login.Controls.Add(this.label4);
             this.gbx_login.Controls.Add(this.txt_login_pwd);
             this.gbx_login.Controls.Add(this.txt_login_name);
             this.gbx_login.Controls.Add(this.btn_login);
-            this.gbx_login.Location = new System.Drawing.Point(25, 137);
+            this.gbx_login.Location = new System.Drawing.Point(6, 6);
             this.gbx_login.Name = "gbx_login";
-            this.gbx_login.Size = new System.Drawing.Size(281, 155);
+            this.gbx_login.Size = new System.Drawing.Size(281, 98);
             this.gbx_login.TabIndex = 11;
             this.gbx_login.TabStop = false;
             this.gbx_login.Text = "Login : ";
             // 
             // pic_avartar
             // 
-            this.pic_avartar.Location = new System.Drawing.Point(115, 65);
+            this.pic_avartar.Location = new System.Drawing.Point(241, 29);
             this.pic_avartar.Name = "pic_avartar";
             this.pic_avartar.Size = new System.Drawing.Size(93, 84);
             this.pic_avartar.TabIndex = 10;
@@ -269,12 +294,21 @@
             this.gbx_register.Controls.Add(this.txt_last_name);
             this.gbx_register.Controls.Add(this.txt_first_name);
             this.gbx_register.Controls.Add(this.btn_regist);
-            this.gbx_register.Location = new System.Drawing.Point(24, 298);
+            this.gbx_register.Location = new System.Drawing.Point(6, 110);
             this.gbx_register.Name = "gbx_register";
             this.gbx_register.Size = new System.Drawing.Size(282, 299);
             this.gbx_register.TabIndex = 11;
             this.gbx_register.TabStop = false;
             this.gbx_register.Text = "Regist : ";
+            // 
+            // label_register_status
+            // 
+            this.label_register_status.AutoSize = true;
+            this.label_register_status.Location = new System.Drawing.Point(132, 85);
+            this.label_register_status.Name = "label_register_status";
+            this.label_register_status.Size = new System.Drawing.Size(14, 12);
+            this.label_register_status.TabIndex = 11;
+            this.label_register_status.Text = "...";
             // 
             // rbn_sex_unknow
             // 
@@ -423,7 +457,7 @@
             this.groupBox1.Controls.Add(this.label13);
             this.groupBox1.Controls.Add(this.txt_forget_password);
             this.groupBox1.Controls.Add(this.btn_forget);
-            this.groupBox1.Location = new System.Drawing.Point(320, 137);
+            this.groupBox1.Location = new System.Drawing.Point(7, 418);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(281, 112);
             this.groupBox1.TabIndex = 11;
@@ -469,10 +503,10 @@
             // 
             // txt_json
             // 
-            this.txt_json.Location = new System.Drawing.Point(320, 332);
+            this.txt_json.Location = new System.Drawing.Point(344, 141);
             this.txt_json.Multiline = true;
             this.txt_json.Name = "txt_json";
-            this.txt_json.Size = new System.Drawing.Size(281, 120);
+            this.txt_json.Size = new System.Drawing.Size(281, 270);
             this.txt_json.TabIndex = 6;
             this.txt_json.Text = "{\r\n    \"status\":0,\r\n    \"msg\":\"ok\",\r\n    \"data\":\r\n    {\r\n        \"friends\":\r\n    " +
     "    [\r\n            {\"id\":1, \"name\":\"night\"},\r\n            {\"id\":3, \"name\":\"tom\"}" +
@@ -481,7 +515,7 @@
             // label_s2c_error
             // 
             this.label_s2c_error.AutoSize = true;
-            this.label_s2c_error.Location = new System.Drawing.Point(318, 31);
+            this.label_s2c_error.Location = new System.Drawing.Point(368, 47);
             this.label_s2c_error.Name = "label_s2c_error";
             this.label_s2c_error.Size = new System.Drawing.Size(17, 12);
             this.label_s2c_error.TabIndex = 10;
@@ -490,29 +524,166 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(314, 13);
+            this.label12.Location = new System.Drawing.Point(364, 29);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(60, 12);
             this.label12.TabIndex = 9;
             this.label12.Text = "S2C  error :";
             // 
-            // label_register_status
+            // groupBox2
             // 
-            this.label_register_status.AutoSize = true;
-            this.label_register_status.Location = new System.Drawing.Point(132, 85);
-            this.label_register_status.Name = "label_register_status";
-            this.label_register_status.Size = new System.Drawing.Size(14, 12);
-            this.label_register_status.TabIndex = 11;
-            this.label_register_status.Text = "...";
+            this.groupBox2.Controls.Add(this.numericUpDown_photo_index);
+            this.groupBox2.Controls.Add(this.btn_get_user_photo);
+            this.groupBox2.Location = new System.Drawing.Point(6, 20);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(282, 76);
+            this.groupBox2.TabIndex = 12;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "取得照片";
+            // 
+            // numericUpDown_photo_index
+            // 
+            this.numericUpDown_photo_index.Location = new System.Drawing.Point(21, 34);
+            this.numericUpDown_photo_index.Name = "numericUpDown_photo_index";
+            this.numericUpDown_photo_index.Size = new System.Drawing.Size(120, 22);
+            this.numericUpDown_photo_index.TabIndex = 0;
+            // 
+            // btn_get_user_photo
+            // 
+            this.btn_get_user_photo.Location = new System.Drawing.Point(164, 31);
+            this.btn_get_user_photo.Name = "btn_get_user_photo";
+            this.btn_get_user_photo.Size = new System.Drawing.Size(87, 23);
+            this.btn_get_user_photo.TabIndex = 1;
+            this.btn_get_user_photo.Text = "Get Photo";
+            this.btn_get_user_photo.UseVisualStyleBackColor = true;
+            this.btn_get_user_photo.Click += new System.EventHandler(this.btn_get_user_photo_Click);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.numericUpDown1);
+            this.groupBox3.Controls.Add(this.btn_upload_photo);
+            this.groupBox3.Location = new System.Drawing.Point(6, 102);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(282, 76);
+            this.groupBox3.TabIndex = 12;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "上傳照片";
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(21, 34);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(120, 22);
+            this.numericUpDown1.TabIndex = 0;
+            // 
+            // btn_upload_photo
+            // 
+            this.btn_upload_photo.Location = new System.Drawing.Point(164, 31);
+            this.btn_upload_photo.Name = "btn_upload_photo";
+            this.btn_upload_photo.Size = new System.Drawing.Size(87, 23);
+            this.btn_upload_photo.TabIndex = 1;
+            this.btn_upload_photo.Text = "upload Photo";
+            this.btn_upload_photo.UseVisualStyleBackColor = true;
+            this.btn_upload_photo.Click += new System.EventHandler(this.btn_upload_photo_Click);
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Location = new System.Drawing.Point(12, 119);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(326, 556);
+            this.tabControl1.TabIndex = 13;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.gbx_login);
+            this.tabPage1.Controls.Add(this.gbx_register);
+            this.tabPage1.Controls.Add(this.groupBox1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(318, 530);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Login...";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.groupBox5);
+            this.tabPage2.Controls.Add(this.groupBox4);
+            this.tabPage2.Controls.Add(this.groupBox2);
+            this.tabPage2.Controls.Add(this.groupBox3);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(318, 530);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Photo...";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.numericUpDown2);
+            this.groupBox4.Controls.Add(this.button2);
+            this.groupBox4.Location = new System.Drawing.Point(6, 194);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(282, 76);
+            this.groupBox4.TabIndex = 13;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "變更照片";
+            // 
+            // numericUpDown2
+            // 
+            this.numericUpDown2.Location = new System.Drawing.Point(21, 34);
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.Size = new System.Drawing.Size(120, 22);
+            this.numericUpDown2.TabIndex = 0;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(164, 31);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(87, 23);
+            this.button2.TabIndex = 1;
+            this.button2.Text = "Change Photo";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.numericUpDown3);
+            this.groupBox5.Controls.Add(this.button3);
+            this.groupBox5.Location = new System.Drawing.Point(6, 297);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(282, 76);
+            this.groupBox5.TabIndex = 13;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "使用照片";
+            // 
+            // numericUpDown3
+            // 
+            this.numericUpDown3.Location = new System.Drawing.Point(21, 34);
+            this.numericUpDown3.Name = "numericUpDown3";
+            this.numericUpDown3.Size = new System.Drawing.Size(120, 22);
+            this.numericUpDown3.TabIndex = 0;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(164, 31);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(87, 23);
+            this.button3.TabIndex = 1;
+            this.button3.Text = "Use Photo";
+            this.button3.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(613, 676);
-            this.Controls.Add(this.gbx_register);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.gbx_login);
+            this.ClientSize = new System.Drawing.Size(647, 698);
+            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.pic_avartar);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label_s2c_error);
             this.Controls.Add(this.label3);
@@ -537,6 +708,17 @@
             this.gbx_register.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_photo_index)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            this.groupBox5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -587,6 +769,21 @@
         private System.Windows.Forms.Label label_s2c_error;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label_register_status;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.NumericUpDown numericUpDown_photo_index;
+        private System.Windows.Forms.Button btn_get_user_photo;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.Button btn_upload_photo;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.NumericUpDown numericUpDown3;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.Button button2;
     }
 }
 

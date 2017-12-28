@@ -79,7 +79,7 @@ namespace JWNetwork
                 {
                     case 0:
                         if (onLoginResult != null)
-                            onLoginResult("Login Successed ^ ^");
+                            onLoginResult(string.Format("Login Successed,uid={0},photoID={1}", datas["uid"].ToString()  , datas["photoId"].ToString() ));
                         break;
                     case 1:
                         if (onLoginResult != null)

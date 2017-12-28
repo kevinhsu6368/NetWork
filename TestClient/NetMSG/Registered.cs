@@ -20,7 +20,6 @@ public class Registered : NetEventBase
 
     public override void MakeC2SData()
     {
-
         c2s_data = new Hashtable();
         c2s_data.Add("firstName", firstName);
         c2s_data.Add("lastName", lastName);
@@ -30,29 +29,23 @@ public class Registered : NetEventBase
         c2s_data.Add("email", email);
         c2s_data.Add("gender", gender);
         c2s_data.Add("country", country);
-        c2s_data.Add("photo", "");// photo);
+        c2s_data.Add("photo", photo);
 
     }
 
     public override void OnRPCEvent(Hashtable datas)
     {
-        string err = datas["rs"].ToString();
+        int err = int.Parse((datas["rs"].ToString()));
         switch (err)
         {
-            case "0":
-                {
-                    S2CResult("Registed : Success");
-                }
+            case 0:
+                S2CResult("Registed : Success");
                 break;
-            case "1":
-                {
-                    S2CResult("Registed : email重複");
-                }
+            case 1:
+                S2CResult("Registed : email重複");
                 break;
-            case "2":
-                {
-                    S2CResult("Registed : 暱稱重複");
-                }
+            case 2:
+                S2CResult("Registed : 暱稱重複");
                 break;
 
             default:

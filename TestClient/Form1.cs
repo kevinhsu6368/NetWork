@@ -27,43 +27,91 @@ namespace TestClient
             ImageMGR.Inst.Init();
         }
 
-        Login login = new Login();
-        ForgetPassword forget = new ForgetPassword();
-        Registered registered = new Registered();
+        AsynchronousClient gameServer = new AsynchronousClient(); // 連接 game server 的網路核心
+
+        Registered registered = new Registered(); // 註冊 的 網路功能
+        Login login = new Login(); // 登入的 網路功能
+        ForgetPassword forget = new ForgetPassword(); // 忘記密碼的 網路功能
+        GetUserPhoto getUserPhoto = new GetUserPhoto(); // 取得照片
+        UploadPhoto uploadPhoto = new UploadPhoto();//上傳照片
 
         private void Init()
         {
-            c.packetType = PacketType.Len4BAndData;
-            c.onConnected = OnConnected;
-            c.onDisconnected = OnDisconnected;
-            c.onConnecteTimeout = OnConnecteTimeout;
-            c.onS2CError = s => this.label_s2c_error.Text = s;
+            gameServer.packetType = PacketType.Len4BAndData;
+            gameServer.onConnected = OnConnected;
+            gameServer.onDisconnected = OnDisconnected;
+            gameServer.onConnecteTimeout = OnConnecteTimeout;
+            gameServer.onS2CError = s => this.label_s2c_error.Text = s;
 
             // register rpc 
 
-            //c.RegRPCEvent(login,"S2C_Login", login.OnRPCEvent);
-            c.RegRPCEvent(login, "login_C2S", "login_S2C");
+            //登入
+            gameServer.RegRPCEvent(login, "login_C2S", "login_S2C");
             login.onLoginResult = OnLoginResult;
 
-            c.RegRPCEvent(forget, "C2S_ForgetPassword", "S2C_ForgetPassword");
-            forget.onS2CResult = s => { this.label_forget.Text = s; };
+            // 註冊
+            gameServer.RegRPCEvent(registered, "registered_C2S", "registered_S2C");
+            registered.onS2CResult = s => { this.label_s2c_error.Text = s; };
 
+            // 忘記密碼
+            gameServer.RegRPCEvent(forget, "forgotPassword_C2S", "forgetPassword_S2C");
+            forget.onS2CResult = s => { this.label_s2c_error.Text = s; };
 
-            c.RegRPCEvent(registered, "registered_C2S", "registered_S2C");
-            registered.onS2CResult = s => { this.label_register_status.Text = s; };
+            // 取得照片
+            gameServer.RegRPCEvent(getUserPhoto, "getUserPhoto_C2S", "getUserPhoto_S2C");
+            getUserPhoto.onS2CResult = s => { this.label_s2c_error.Text = s; };
+            getUserPhoto.onS2CResult += OnS2CResult_getUserPhoto;
 
+            // 上傳照片
+            gameServer.RegRPCEvent(uploadPhoto, "uploadPhoto_C2S", "uploadPhoto_S2C");
+            uploadPhoto.onS2CResult = s => { this.label_s2c_error.Text = s; };
 
+        }
 
+        private void OnS2CResult_getUserPhoto(string s)
+        {
+            if (s.Contains("GetUserPhoto Success"))
+            {
+                //this.label_login_status.Text = "Get Photo";
+                string[] ss = s.Split(',');
+                foreach (string x in ss)
+                {
+                    if (!x.Contains("photo="))
+                        continue;
+
+                    byte[] bs = StringTools.HexStringToByteArray(x.Replace("photo=", ""));
+                    MemoryStream ms = new MemoryStream(bs);
+
+                    Image bmp = Bitmap.FromStream(ms);
+                    this.pic_avartar.Image = bmp;
+                    this.pic_avartar.SizeMode = PictureBoxSizeMode.Zoom;
+
+                    ms.Close();
+                }
+            }
+            else
+            {
+                this.label_login_status.Text = s;
+            }
         }
 
         private void OnLoginResult(string s)
         {
             
             Console.WriteLine("OnLoginResult in Form1 at : " + DateTime.Now.ToString("HH:mm:ss.fff"));
-
-            if (s.Contains("Photo:"))
+            this.label_s2c_error.Text = s;
+            string [] xx = s.Split(',');
+            foreach (var x in xx)
             {
-                this.label_login_status.Text = "Get Photo";
+                if (x.Contains("photoId="))
+                    continue;
+
+            }
+            /*
+            if (s.Contains("photoId="))
+            {
+                
+                //this.label_login_status.Text = "Get Photo";
                 string[] ss = s.Split(':');
                 byte[] bs = StringTools.HexStringToByteArray(ss[1]);
                 MemoryStream ms = new MemoryStream(bs);
@@ -74,10 +122,7 @@ namespace TestClient
 
                 ms.Close();
             }
-            else
-            {
-                this.label_login_status.Text = s;
-            }
+ */
         }
 
         private void OnDisconnected(string flag)
@@ -100,13 +145,13 @@ namespace TestClient
 
         }
 
-        AsynchronousClient c = new AsynchronousClient();
+        
 
         private void btn_start_Click(object sender, EventArgs e)
         {
             try
             {
-                c.Start(this.txt_IP.Text, int.Parse(this.txt_Port.Text));
+                gameServer.Start(this.txt_IP.Text, int.Parse(this.txt_Port.Text));
             }
             catch (Exception ex)
             {
@@ -117,35 +162,32 @@ namespace TestClient
 
         private void btn_sendMSG_Click(object sender, EventArgs e)
         {
-            c.Send("我是Client");
+            gameServer.Send("我是Client");
         }
 
         private void btn_sendHex_Click(object sender, EventArgs e)
         {
             byte[] bs = new byte[] { 0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C};
-            c.Send(bs);
+            gameServer.Send(bs);
         }
 
         private void btn_Stop_Click(object sender, EventArgs e)
         {
-            c.Stop();
+            gameServer.Stop();
         }
 
         private void btn_login_Click(object sender, EventArgs e)
         {
+            this.label_login_status.Text = "";
             login.Account = txt_login_name.Text;
             login.Password = txt_login_pwd.Text;
-            
-            this.label_login_status.Text = "";
-
             login.MakeC2SData();
             login.ExecuteC2SEvent(true);
-            //login.doLogin();
         }
 
         private void btn_regist_Click(object sender, EventArgs e)
         {
-            this.label_register_status.Text = "";
+            this.label_s2c_error.Text = "";
             registered.firstName = this.txt_first_name.Text;
             registered.lastName = this.txt_last_name.Text;
             registered.nickName = this.txt_nick_name.Text;
@@ -184,12 +226,26 @@ namespace TestClient
                 string id = v["id"].ToString();
                 string name = v["name"].ToString();
             }
-            c.Send(txt_json.Text);
+            gameServer.Send(txt_json.Text);
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            c.Stop();
+            gameServer.Stop();
+        }
+
+        private void btn_get_user_photo_Click(object sender, EventArgs e)
+        {
+            getUserPhoto.photoId = (int)numericUpDown_photo_index.Value;
+            getUserPhoto.MakeC2SData();
+            getUserPhoto.ExecuteC2SEvent(true);
+        }
+
+        private void btn_upload_photo_Click(object sender, EventArgs e)
+        {
+            uploadPhoto.photo = ImageMGR.Inst.GetImage(new Random().Next(0, 10)).hexData;
+            uploadPhoto.MakeC2SData();
+            uploadPhoto.ExecuteC2SEvent(true);
         }
     }
 }

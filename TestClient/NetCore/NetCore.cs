@@ -377,6 +377,12 @@ namespace JWNetwork
         public Action<string> onS2CResult;
 
 
+        /// <summary>
+        /// 網路通訊 S2C 過程,處理結果通知事件(附帶原始料)
+        /// </summary>
+        public Action<string, Hashtable> onS2CResultWithData;
+
+
 
         #region C2S 
 
