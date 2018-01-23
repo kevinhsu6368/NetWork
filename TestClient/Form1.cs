@@ -35,6 +35,13 @@ namespace TestClient
         GetUserPhoto getUserPhoto = new GetUserPhoto(); // 取得照片
         UploadPhoto uploadPhoto = new UploadPhoto();//上傳照片
 
+        AddPartner addPartner = new AddPartner();
+        AddPartnerRequest addPartnerRequest = new AddPartnerRequest();
+        AddPartnerResponse addPartnerResponse = new AddPartnerResponse();
+        GetPartnersList getPartnersList = new GetPartnersList();
+        RemovePartner removePartner = new RemovePartner();
+
+
         private void Init()
         {
             gameServer.packetType = PacketType.Len4BAndData;
@@ -65,6 +72,31 @@ namespace TestClient
             // 上傳照片
             gameServer.RegRPCEvent(uploadPhoto, "uploadPhoto_C2S", "uploadPhoto_S2C");
             uploadPhoto.onS2CResult = s => { this.label_s2c_error.Text = s; };
+
+            // addPartner
+            gameServer.RegRPCEvent(addPartner, "addPartner_C2S", "addPartner_S2C");
+            addPartner.onS2CResult = s => { this.label_s2c_error.Text = s; };
+
+            // addPartnerRequest
+            gameServer.RegRPCEvent(addPartnerRequest, "addPartnerRequest_C2S", "addPartnerRequest_S2C");
+            addPartnerRequest.onS2CResult = s => { this.label_s2c_error.Text = s; };
+            addPartnerRequest.onS2CResultWithData = (s, hashtable) =>
+            {
+                this.txtPartnerInviterUID.Text = hashtable["inviter"].ToString();
+                this.txtPartnerInviterName.Text = hashtable["nickName"].ToString();
+            };
+
+            // addPartnerResponse
+            gameServer.RegRPCEvent(addPartnerResponse, "addPartnerResponse_C2S", "addPartnerResponse_S2C");
+            addPartnerResponse.onS2CResult = s => { this.label_s2c_error.Text = s; };
+
+            // getPartnersList
+            gameServer.RegRPCEvent(getPartnersList, "getPartnersList_C2S", "getPartnersList_S2C");
+            getPartnersList.onS2CResult = s => { this.label_s2c_error.Text = s; };
+
+            // removePartner
+            gameServer.RegRPCEvent(removePartner, "removePartner_C2S", "removePartner_S2C");
+            removePartner.onS2CResult = s => { this.label_s2c_error.Text = s; };
 
         }
 
@@ -246,6 +278,30 @@ namespace TestClient
             uploadPhoto.photo = ImageMGR.Inst.GetImage(new Random().Next(0, 10)).hexData;
             uploadPhoto.MakeC2SData();
             uploadPhoto.ExecuteC2SEvent(true);
+        }
+
+        private void btn_partner_add_Click(object sender, EventArgs e)
+        {
+            addPartner.email = txt_partner_email.Text;
+            addPartner.MakeC2SData();
+            addPartner.ExecuteC2SEvent(true);
+        }
+
+        private void btn_Partner_response_agree_Click(object sender, EventArgs e)
+        {
+            addPartnerResponse.inviterUid = txtPartnerInviterUID.Text;
+            addPartnerResponse.isAgree = true;
+            addPartnerResponse.MakeC2SData();
+            addPartnerResponse.ExecuteC2SEvent(true);
+
+        }
+
+        private void btn_Partner_response_deny_Click(object sender, EventArgs e)
+        {
+            addPartnerResponse.inviterUid = txtPartnerInviterUID.Text;
+            addPartnerResponse.isAgree = false;
+            addPartnerResponse.MakeC2SData();
+            addPartnerResponse.ExecuteC2SEvent(true);
         }
     }
 }

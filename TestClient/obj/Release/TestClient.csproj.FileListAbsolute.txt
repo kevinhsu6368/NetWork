@@ -1,0 +1,8 @@
+E:\Work2\NetWork\TestClient\bin\Release\TestClient.exe.config
+E:\Work2\NetWork\TestClient\bin\Release\TestClient.exe
+E:\Work2\NetWork\TestClient\bin\Release\TestClient.pdb
+E:\Work2\NetWork\TestClient\obj\Release\TestClient.Form1.resources
+E:\Work2\NetWork\TestClient\obj\Release\TestClient.Properties.Resources.resources
+E:\Work2\NetWork\TestClient\obj\Release\TestClient.csproj.GenerateResource.Cache
+E:\Work2\NetWork\TestClient\obj\Release\TestClient.exe
+E:\Work2\NetWork\TestClient\obj\Release\TestClient.pdb

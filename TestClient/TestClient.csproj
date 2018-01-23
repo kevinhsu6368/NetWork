@@ -45,7 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NetMSG\Partner\addPartner.cs" />
+    <Compile Include="NetMSG\Partner\addPartnerRequest.cs" />
+    <Compile Include="NetMSG\Partner\addPartnerResponse.cs" />
     <Compile Include="NetMSG\GetUserPhoto.cs" />
+    <Compile Include="NetMSG\Partner\getPartnersList.cs" />
+    <Compile Include="NetMSG\Partner\removePartner.cs" />
     <Compile Include="NetMSG\UploadPhoto.cs" />
     <Compile Include="Tools\ImageMGR.cs" />
     <Compile Include="Tools\MiniJSON.cs" />
