@@ -75,17 +75,16 @@
             this.numericUpDown_photo_index = new System.Windows.Forms.NumericUpDown();
             this.btn_get_user_photo = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.btn_upload_photo = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
-            this.button3 = new System.Windows.Forms.Button();
+            this.numericUpDown_use_photo = new System.Windows.Forms.NumericUpDown();
+            this.btn_use_photo = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
-            this.button2 = new System.Windows.Forms.Button();
+            this.numericUpDown_update_photo = new System.Windows.Forms.NumericUpDown();
+            this.btn_update_photo = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.btn_partner_add = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
@@ -96,6 +95,23 @@
             this.label15 = new System.Windows.Forms.Label();
             this.txtPartnerInviterName = new System.Windows.Forms.TextBox();
             this.btn_Partner_response_deny = new System.Windows.Forms.Button();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.btn_getAllPhoto = new System.Windows.Forms.Button();
+            this.label_photoId_1 = new System.Windows.Forms.Label();
+            this.pic_photo1 = new System.Windows.Forms.PictureBox();
+            this.pic_photo2 = new System.Windows.Forms.PictureBox();
+            this.pic_photo3 = new System.Windows.Forms.PictureBox();
+            this.pic_photo4 = new System.Windows.Forms.PictureBox();
+            this.pic_photo5 = new System.Windows.Forms.PictureBox();
+            this.pic_photo6 = new System.Windows.Forms.PictureBox();
+            this.label_photoId_2 = new System.Windows.Forms.Label();
+            this.label_photoId_3 = new System.Windows.Forms.Label();
+            this.label_photoId_4 = new System.Windows.Forms.Label();
+            this.label_photoId_5 = new System.Windows.Forms.Label();
+            this.label_photoId_6 = new System.Windows.Forms.Label();
+            this.btn_logout = new System.Windows.Forms.Button();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.gbx_login.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pic_avartar)).BeginInit();
             this.gbx_register.SuspendLayout();
@@ -103,15 +119,23 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_photo_index)).BeginInit();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_use_photo)).BeginInit();
             this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_update_photo)).BeginInit();
             this.tabPage3.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_photo1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_photo2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_photo3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_photo4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_photo5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_photo6)).BeginInit();
+            this.groupBox7.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_start
@@ -277,6 +301,7 @@
             this.gbx_login.Controls.Add(this.label4);
             this.gbx_login.Controls.Add(this.txt_login_pwd);
             this.gbx_login.Controls.Add(this.txt_login_name);
+            this.gbx_login.Controls.Add(this.btn_logout);
             this.gbx_login.Controls.Add(this.btn_login);
             this.gbx_login.Location = new System.Drawing.Point(8, 8);
             this.gbx_login.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -591,7 +616,7 @@
             // 
             this.groupBox2.Controls.Add(this.numericUpDown_photo_index);
             this.groupBox2.Controls.Add(this.btn_get_user_photo);
-            this.groupBox2.Location = new System.Drawing.Point(8, 25);
+            this.groupBox2.Location = new System.Drawing.Point(27, 222);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -604,9 +629,19 @@
             // 
             this.numericUpDown_photo_index.Location = new System.Drawing.Point(28, 42);
             this.numericUpDown_photo_index.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numericUpDown_photo_index.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
             this.numericUpDown_photo_index.Name = "numericUpDown_photo_index";
             this.numericUpDown_photo_index.Size = new System.Drawing.Size(160, 25);
             this.numericUpDown_photo_index.TabIndex = 0;
+            this.numericUpDown_photo_index.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             // 
             // btn_get_user_photo
             // 
@@ -621,9 +656,8 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.numericUpDown1);
             this.groupBox3.Controls.Add(this.btn_upload_photo);
-            this.groupBox3.Location = new System.Drawing.Point(8, 128);
+            this.groupBox3.Location = new System.Drawing.Point(27, 325);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -632,14 +666,6 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "上傳照片";
             // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Location = new System.Drawing.Point(28, 42);
-            this.numericUpDown1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(160, 25);
-            this.numericUpDown1.TabIndex = 0;
-            // 
             // btn_upload_photo
             // 
             this.btn_upload_photo.Location = new System.Drawing.Point(219, 39);
@@ -647,7 +673,7 @@
             this.btn_upload_photo.Name = "btn_upload_photo";
             this.btn_upload_photo.Size = new System.Drawing.Size(116, 29);
             this.btn_upload_photo.TabIndex = 1;
-            this.btn_upload_photo.Text = "upload Photo";
+            this.btn_upload_photo.Text = "Upload Photo";
             this.btn_upload_photo.UseVisualStyleBackColor = true;
             this.btn_upload_photo.Click += new System.EventHandler(this.btn_upload_photo_Click);
             // 
@@ -674,13 +700,14 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage1.Size = new System.Drawing.Size(427, 666);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Login...";
+            this.tabPage1.Text = "Login";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.groupBox5);
             this.tabPage2.Controls.Add(this.groupBox4);
+            this.tabPage2.Controls.Add(this.groupBox6);
             this.tabPage2.Controls.Add(this.groupBox2);
             this.tabPage2.Controls.Add(this.groupBox3);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
@@ -689,14 +716,14 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage2.Size = new System.Drawing.Size(427, 666);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Photo...";
+            this.tabPage2.Text = "Photo";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.numericUpDown3);
-            this.groupBox5.Controls.Add(this.button3);
-            this.groupBox5.Location = new System.Drawing.Point(8, 371);
+            this.groupBox5.Controls.Add(this.numericUpDown_use_photo);
+            this.groupBox5.Controls.Add(this.btn_use_photo);
+            this.groupBox5.Location = new System.Drawing.Point(27, 568);
             this.groupBox5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -705,87 +732,102 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "使用照片";
             // 
-            // numericUpDown3
+            // numericUpDown_use_photo
             // 
-            this.numericUpDown3.Location = new System.Drawing.Point(28, 42);
-            this.numericUpDown3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(160, 25);
-            this.numericUpDown3.TabIndex = 0;
+            this.numericUpDown_use_photo.Location = new System.Drawing.Point(28, 42);
+            this.numericUpDown_use_photo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numericUpDown_use_photo.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDown_use_photo.Name = "numericUpDown_use_photo";
+            this.numericUpDown_use_photo.Size = new System.Drawing.Size(160, 25);
+            this.numericUpDown_use_photo.TabIndex = 0;
+            this.numericUpDown_use_photo.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             // 
-            // button3
+            // btn_use_photo
             // 
-            this.button3.Location = new System.Drawing.Point(219, 39);
-            this.button3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(116, 29);
-            this.button3.TabIndex = 1;
-            this.button3.Text = "Use Photo";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btn_use_photo.Location = new System.Drawing.Point(219, 39);
+            this.btn_use_photo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_use_photo.Name = "btn_use_photo";
+            this.btn_use_photo.Size = new System.Drawing.Size(116, 29);
+            this.btn_use_photo.TabIndex = 1;
+            this.btn_use_photo.Text = "Use Photo";
+            this.btn_use_photo.UseVisualStyleBackColor = true;
+            this.btn_use_photo.Click += new System.EventHandler(this.btn_use_photo_Click);
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.numericUpDown2);
-            this.groupBox4.Controls.Add(this.button2);
-            this.groupBox4.Location = new System.Drawing.Point(8, 242);
+            this.groupBox4.Controls.Add(this.numericUpDown_update_photo);
+            this.groupBox4.Controls.Add(this.btn_update_photo);
+            this.groupBox4.Location = new System.Drawing.Point(27, 439);
             this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox4.Size = new System.Drawing.Size(376, 95);
             this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "變更照片";
+            this.groupBox4.Text = "更新照片";
             // 
-            // numericUpDown2
+            // numericUpDown_update_photo
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(28, 42);
-            this.numericUpDown2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(160, 25);
-            this.numericUpDown2.TabIndex = 0;
+            this.numericUpDown_update_photo.Location = new System.Drawing.Point(28, 42);
+            this.numericUpDown_update_photo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numericUpDown_update_photo.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDown_update_photo.Name = "numericUpDown_update_photo";
+            this.numericUpDown_update_photo.Size = new System.Drawing.Size(160, 25);
+            this.numericUpDown_update_photo.TabIndex = 0;
+            this.numericUpDown_update_photo.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             // 
-            // button2
+            // btn_update_photo
             // 
-            this.button2.Location = new System.Drawing.Point(219, 39);
-            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(116, 29);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "Change Photo";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btn_update_photo.Location = new System.Drawing.Point(219, 39);
+            this.btn_update_photo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_update_photo.Name = "btn_update_photo";
+            this.btn_update_photo.Size = new System.Drawing.Size(116, 29);
+            this.btn_update_photo.TabIndex = 1;
+            this.btn_update_photo.Text = "Update Photo";
+            this.btn_update_photo.UseVisualStyleBackColor = true;
+            this.btn_update_photo.Click += new System.EventHandler(this.btn_update_photo_Click);
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.label15);
-            this.tabPage3.Controls.Add(this.label14);
-            this.tabPage3.Controls.Add(this.label11);
-            this.tabPage3.Controls.Add(this.txtPartnerInviterName);
-            this.tabPage3.Controls.Add(this.txtPartnerInviterUID);
-            this.tabPage3.Controls.Add(this.txt_partner_email);
-            this.tabPage3.Controls.Add(this.btn_Partner_response_deny);
-            this.tabPage3.Controls.Add(this.btn_Partner_response_agree);
-            this.tabPage3.Controls.Add(this.btn_partner_add);
+            this.tabPage3.Controls.Add(this.groupBox8);
+            this.tabPage3.Controls.Add(this.groupBox7);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(427, 666);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "夥伴";
+            this.tabPage3.Text = "Partner";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // btn_partner_add
             // 
-            this.btn_partner_add.Location = new System.Drawing.Point(15, 75);
+            this.btn_partner_add.Location = new System.Drawing.Point(183, 57);
             this.btn_partner_add.Name = "btn_partner_add";
-            this.btn_partner_add.Size = new System.Drawing.Size(75, 23);
+            this.btn_partner_add.Size = new System.Drawing.Size(98, 23);
             this.btn_partner_add.TabIndex = 0;
-            this.btn_partner_add.Text = "Add";
+            this.btn_partner_add.Text = "Add Partner";
             this.btn_partner_add.UseVisualStyleBackColor = true;
             this.btn_partner_add.Click += new System.EventHandler(this.btn_partner_add_Click);
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(12, 20);
+            this.label11.Location = new System.Drawing.Point(28, 39);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(49, 15);
@@ -794,7 +836,7 @@
             // 
             // txt_partner_email
             // 
-            this.txt_partner_email.Location = new System.Drawing.Point(15, 38);
+            this.txt_partner_email.Location = new System.Drawing.Point(31, 57);
             this.txt_partner_email.Margin = new System.Windows.Forms.Padding(4);
             this.txt_partner_email.Multiline = true;
             this.txt_partner_email.Name = "txt_partner_email";
@@ -804,7 +846,7 @@
             // 
             // btn_Partner_response_agree
             // 
-            this.btn_Partner_response_agree.Location = new System.Drawing.Point(15, 175);
+            this.btn_Partner_response_agree.Location = new System.Drawing.Point(34, 91);
             this.btn_Partner_response_agree.Name = "btn_Partner_response_agree";
             this.btn_Partner_response_agree.Size = new System.Drawing.Size(75, 23);
             this.btn_Partner_response_agree.TabIndex = 0;
@@ -814,7 +856,7 @@
             // 
             // txtPartnerInviterUID
             // 
-            this.txtPartnerInviterUID.Location = new System.Drawing.Point(15, 138);
+            this.txtPartnerInviterUID.Location = new System.Drawing.Point(29, 43);
             this.txtPartnerInviterUID.Margin = new System.Windows.Forms.Padding(4);
             this.txtPartnerInviterUID.Multiline = true;
             this.txtPartnerInviterUID.Name = "txtPartnerInviterUID";
@@ -824,17 +866,17 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(12, 120);
+            this.label14.Location = new System.Drawing.Point(26, 25);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(52, 15);
+            this.label14.Size = new System.Drawing.Size(74, 15);
             this.label14.TabIndex = 11;
-            this.label14.Text = "inviter :";
+            this.label14.Text = "inviter uid :";
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(117, 120);
+            this.label15.Location = new System.Drawing.Point(131, 25);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(89, 15);
@@ -843,7 +885,7 @@
             // 
             // txtPartnerInviterName
             // 
-            this.txtPartnerInviterName.Location = new System.Drawing.Point(120, 138);
+            this.txtPartnerInviterName.Location = new System.Drawing.Point(134, 43);
             this.txtPartnerInviterName.Margin = new System.Windows.Forms.Padding(4);
             this.txtPartnerInviterName.Multiline = true;
             this.txtPartnerInviterName.Name = "txtPartnerInviterName";
@@ -852,13 +894,200 @@
             // 
             // btn_Partner_response_deny
             // 
-            this.btn_Partner_response_deny.Location = new System.Drawing.Point(113, 175);
+            this.btn_Partner_response_deny.Location = new System.Drawing.Point(132, 91);
             this.btn_Partner_response_deny.Name = "btn_Partner_response_deny";
             this.btn_Partner_response_deny.Size = new System.Drawing.Size(75, 23);
             this.btn_Partner_response_deny.TabIndex = 0;
             this.btn_Partner_response_deny.Text = "Deny";
             this.btn_Partner_response_deny.UseVisualStyleBackColor = true;
             this.btn_Partner_response_deny.Click += new System.EventHandler(this.btn_Partner_response_deny_Click);
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.pic_photo6);
+            this.groupBox6.Controls.Add(this.pic_photo5);
+            this.groupBox6.Controls.Add(this.pic_photo4);
+            this.groupBox6.Controls.Add(this.pic_photo3);
+            this.groupBox6.Controls.Add(this.pic_photo2);
+            this.groupBox6.Controls.Add(this.pic_photo1);
+            this.groupBox6.Controls.Add(this.btn_getAllPhoto);
+            this.groupBox6.Controls.Add(this.label_photoId_6);
+            this.groupBox6.Controls.Add(this.label_photoId_5);
+            this.groupBox6.Controls.Add(this.label_photoId_4);
+            this.groupBox6.Controls.Add(this.label_photoId_3);
+            this.groupBox6.Controls.Add(this.label_photoId_2);
+            this.groupBox6.Controls.Add(this.label_photoId_1);
+            this.groupBox6.Location = new System.Drawing.Point(27, 30);
+            this.groupBox6.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox6.Size = new System.Drawing.Size(376, 184);
+            this.groupBox6.TabIndex = 12;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "取得所有照片";
+            // 
+            // btn_getAllPhoto
+            // 
+            this.btn_getAllPhoto.Location = new System.Drawing.Point(20, 38);
+            this.btn_getAllPhoto.Margin = new System.Windows.Forms.Padding(4);
+            this.btn_getAllPhoto.Name = "btn_getAllPhoto";
+            this.btn_getAllPhoto.Size = new System.Drawing.Size(116, 29);
+            this.btn_getAllPhoto.TabIndex = 1;
+            this.btn_getAllPhoto.Text = "Get All Photo";
+            this.btn_getAllPhoto.UseVisualStyleBackColor = true;
+            this.btn_getAllPhoto.Click += new System.EventHandler(this.btn_getAllPhoto_Click);
+            // 
+            // label_photoId_1
+            // 
+            this.label_photoId_1.AutoSize = true;
+            this.label_photoId_1.Location = new System.Drawing.Point(17, 81);
+            this.label_photoId_1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label_photoId_1.Name = "label_photoId_1";
+            this.label_photoId_1.Size = new System.Drawing.Size(22, 15);
+            this.label_photoId_1.TabIndex = 10;
+            this.label_photoId_1.Text = "---";
+            // 
+            // pic_photo1
+            // 
+            this.pic_photo1.Location = new System.Drawing.Point(20, 100);
+            this.pic_photo1.Margin = new System.Windows.Forms.Padding(4);
+            this.pic_photo1.Name = "pic_photo1";
+            this.pic_photo1.Size = new System.Drawing.Size(50, 48);
+            this.pic_photo1.TabIndex = 10;
+            this.pic_photo1.TabStop = false;
+            // 
+            // pic_photo2
+            // 
+            this.pic_photo2.Location = new System.Drawing.Point(78, 100);
+            this.pic_photo2.Margin = new System.Windows.Forms.Padding(4);
+            this.pic_photo2.Name = "pic_photo2";
+            this.pic_photo2.Size = new System.Drawing.Size(50, 48);
+            this.pic_photo2.TabIndex = 10;
+            this.pic_photo2.TabStop = false;
+            // 
+            // pic_photo3
+            // 
+            this.pic_photo3.Location = new System.Drawing.Point(136, 100);
+            this.pic_photo3.Margin = new System.Windows.Forms.Padding(4);
+            this.pic_photo3.Name = "pic_photo3";
+            this.pic_photo3.Size = new System.Drawing.Size(50, 48);
+            this.pic_photo3.TabIndex = 10;
+            this.pic_photo3.TabStop = false;
+            // 
+            // pic_photo4
+            // 
+            this.pic_photo4.Location = new System.Drawing.Point(194, 100);
+            this.pic_photo4.Margin = new System.Windows.Forms.Padding(4);
+            this.pic_photo4.Name = "pic_photo4";
+            this.pic_photo4.Size = new System.Drawing.Size(50, 48);
+            this.pic_photo4.TabIndex = 10;
+            this.pic_photo4.TabStop = false;
+            // 
+            // pic_photo5
+            // 
+            this.pic_photo5.Location = new System.Drawing.Point(252, 100);
+            this.pic_photo5.Margin = new System.Windows.Forms.Padding(4);
+            this.pic_photo5.Name = "pic_photo5";
+            this.pic_photo5.Size = new System.Drawing.Size(50, 48);
+            this.pic_photo5.TabIndex = 10;
+            this.pic_photo5.TabStop = false;
+            // 
+            // pic_photo6
+            // 
+            this.pic_photo6.Location = new System.Drawing.Point(310, 100);
+            this.pic_photo6.Margin = new System.Windows.Forms.Padding(4);
+            this.pic_photo6.Name = "pic_photo6";
+            this.pic_photo6.Size = new System.Drawing.Size(50, 48);
+            this.pic_photo6.TabIndex = 10;
+            this.pic_photo6.TabStop = false;
+            // 
+            // label_photoId_2
+            // 
+            this.label_photoId_2.AutoSize = true;
+            this.label_photoId_2.Location = new System.Drawing.Point(75, 81);
+            this.label_photoId_2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label_photoId_2.Name = "label_photoId_2";
+            this.label_photoId_2.Size = new System.Drawing.Size(22, 15);
+            this.label_photoId_2.TabIndex = 10;
+            this.label_photoId_2.Text = "---";
+            // 
+            // label_photoId_3
+            // 
+            this.label_photoId_3.AutoSize = true;
+            this.label_photoId_3.Location = new System.Drawing.Point(133, 81);
+            this.label_photoId_3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label_photoId_3.Name = "label_photoId_3";
+            this.label_photoId_3.Size = new System.Drawing.Size(22, 15);
+            this.label_photoId_3.TabIndex = 10;
+            this.label_photoId_3.Text = "---";
+            // 
+            // label_photoId_4
+            // 
+            this.label_photoId_4.AutoSize = true;
+            this.label_photoId_4.Location = new System.Drawing.Point(191, 81);
+            this.label_photoId_4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label_photoId_4.Name = "label_photoId_4";
+            this.label_photoId_4.Size = new System.Drawing.Size(22, 15);
+            this.label_photoId_4.TabIndex = 10;
+            this.label_photoId_4.Text = "---";
+            // 
+            // label_photoId_5
+            // 
+            this.label_photoId_5.AutoSize = true;
+            this.label_photoId_5.Location = new System.Drawing.Point(249, 81);
+            this.label_photoId_5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label_photoId_5.Name = "label_photoId_5";
+            this.label_photoId_5.Size = new System.Drawing.Size(22, 15);
+            this.label_photoId_5.TabIndex = 10;
+            this.label_photoId_5.Text = "---";
+            // 
+            // label_photoId_6
+            // 
+            this.label_photoId_6.AutoSize = true;
+            this.label_photoId_6.Location = new System.Drawing.Point(307, 81);
+            this.label_photoId_6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label_photoId_6.Name = "label_photoId_6";
+            this.label_photoId_6.Size = new System.Drawing.Size(22, 15);
+            this.label_photoId_6.TabIndex = 10;
+            this.label_photoId_6.Text = "---";
+            // 
+            // btn_logout
+            // 
+            this.btn_logout.Location = new System.Drawing.Point(240, 80);
+            this.btn_logout.Margin = new System.Windows.Forms.Padding(4);
+            this.btn_logout.Name = "btn_logout";
+            this.btn_logout.Size = new System.Drawing.Size(112, 29);
+            this.btn_logout.TabIndex = 1;
+            this.btn_logout.Text = "logout";
+            this.btn_logout.UseVisualStyleBackColor = true;
+            this.btn_logout.Click += new System.EventHandler(this.btn_login_Click);
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.label11);
+            this.groupBox7.Controls.Add(this.txt_partner_email);
+            this.groupBox7.Controls.Add(this.btn_partner_add);
+            this.groupBox7.Location = new System.Drawing.Point(25, 21);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(332, 112);
+            this.groupBox7.TabIndex = 12;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Add Partner";
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.txtPartnerInviterName);
+            this.groupBox8.Controls.Add(this.btn_Partner_response_agree);
+            this.groupBox8.Controls.Add(this.label15);
+            this.groupBox8.Controls.Add(this.btn_Partner_response_deny);
+            this.groupBox8.Controls.Add(this.label14);
+            this.groupBox8.Controls.Add(this.txtPartnerInviterUID);
+            this.groupBox8.Location = new System.Drawing.Point(25, 166);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(332, 131);
+            this.groupBox8.TabIndex = 12;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Request Invite";
             // 
             // Form1
             // 
@@ -895,16 +1124,26 @@
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_photo_index)).EndInit();
             this.groupBox3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_use_photo)).EndInit();
             this.groupBox4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_update_photo)).EndInit();
             this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_photo1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_photo2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_photo3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_photo4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_photo5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_photo6)).EndInit();
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -959,17 +1198,16 @@
         private System.Windows.Forms.NumericUpDown numericUpDown_photo_index;
         private System.Windows.Forms.Button btn_get_user_photo;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Button btn_upload_photo;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.NumericUpDown numericUpDown3;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.NumericUpDown numericUpDown_use_photo;
+        private System.Windows.Forms.Button btn_use_photo;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.NumericUpDown numericUpDown_update_photo;
+        private System.Windows.Forms.Button btn_update_photo;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox txt_partner_email;
@@ -980,6 +1218,23 @@
         private System.Windows.Forms.TextBox txtPartnerInviterUID;
         private System.Windows.Forms.Button btn_Partner_response_deny;
         private System.Windows.Forms.Button btn_Partner_response_agree;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.Button btn_getAllPhoto;
+        private System.Windows.Forms.Label label_photoId_1;
+        private System.Windows.Forms.PictureBox pic_photo6;
+        private System.Windows.Forms.PictureBox pic_photo5;
+        private System.Windows.Forms.PictureBox pic_photo4;
+        private System.Windows.Forms.PictureBox pic_photo3;
+        private System.Windows.Forms.PictureBox pic_photo2;
+        private System.Windows.Forms.PictureBox pic_photo1;
+        private System.Windows.Forms.Label label_photoId_6;
+        private System.Windows.Forms.Label label_photoId_5;
+        private System.Windows.Forms.Label label_photoId_4;
+        private System.Windows.Forms.Label label_photoId_3;
+        private System.Windows.Forms.Label label_photoId_2;
+        private System.Windows.Forms.Button btn_logout;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.GroupBox groupBox7;
     }
 }
 

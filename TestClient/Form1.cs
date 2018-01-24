@@ -40,7 +40,9 @@ namespace TestClient
         AddPartnerResponse addPartnerResponse = new AddPartnerResponse();
         GetPartnersList getPartnersList = new GetPartnersList();
         RemovePartner removePartner = new RemovePartner();
-
+        UpdatePhoto updatePhoto = new UpdatePhoto();
+        GetAllUserPhoto getAllUserPhoto = new GetAllUserPhoto();
+        SetUserPhoto setUserPhoto = new SetUserPhoto();
 
         private void Init()
         {
@@ -72,6 +74,53 @@ namespace TestClient
             // 上傳照片
             gameServer.RegRPCEvent(uploadPhoto, "uploadPhoto_C2S", "uploadPhoto_S2C");
             uploadPhoto.onS2CResult = s => { this.label_s2c_error.Text = s; };
+
+            // 更新照片
+            gameServer.RegRPCEvent(updatePhoto, "updatePhoto_C2S", "updatePhoto_S2C");
+            updatePhoto.onS2CResult = s => { this.label_s2c_error.Text = s; };
+
+
+            // 更新照片
+            gameServer.RegRPCEvent(setUserPhoto, "setUserPhoto_C2S", "setUserPhoto_S2C");
+            setUserPhoto.onS2CResult = s => { this.label_s2c_error.Text = s; };
+
+
+            // 上傳照片
+            gameServer.RegRPCEvent(getAllUserPhoto, "getAllUserPhoto_C2S", "getAllUserPhoto_S2C");
+            getAllUserPhoto.onS2CResult = s => { this.label_s2c_error.Text = s; };
+            getAllUserPhoto.onS2CResultWithData = (s, data) =>
+            {
+                int total = int.Parse(data["total"].ToString());
+                if (total == 0)
+                    return;
+                int number = int.Parse(data["number"].ToString());
+                long uid = long.Parse(data["uid"].ToString());
+                long photoId = long.Parse(data["photoId"].ToString());
+                string photo = data["photo"].ToString();
+
+                PictureBox[] pics = {this.pic_photo1, pic_photo2, pic_photo3, pic_photo4, pic_photo5, pic_photo6};
+                Label[] ids =
+                {
+                    label_photoId_1, label_photoId_2, label_photoId_3, label_photoId_4, label_photoId_5,
+                    label_photoId_6
+                };
+
+                if (number <= pics.Length)
+                {
+                    byte[] bs = StringTools.HexStringToByteArray(photo);
+                    MemoryStream ms = new MemoryStream(bs);
+
+                    Image bmp = Bitmap.FromStream(ms);
+                    pics[number-1].Image = bmp;
+                    pics[number-1].SizeMode = PictureBoxSizeMode.Zoom;
+
+                    ms.Close();
+
+                    ids[number-1].Text = photoId.ToString();
+                }
+
+            };
+
 
             // addPartner
             gameServer.RegRPCEvent(addPartner, "addPartner_C2S", "addPartner_S2C");
@@ -225,7 +274,7 @@ namespace TestClient
             registered.nickName = this.txt_nick_name.Text;
             registered.birthday = string.Format("{0}-{1}-{2}", new Random().Next(1950, 2010), new Random().Next(1, 12), new Random().Next(1, 30));
             registered.country = new Random().Next(100, 200).ToString();
-            registered.pwd = this.txt_login_pwd.Text;
+            registered.pwd = this.txt_pwd.Text;
             registered.email = this.txt_email.Text;
             if (this.rbn_sex_woman.Checked)
                 registered.gender = 0;
@@ -302,6 +351,41 @@ namespace TestClient
             addPartnerResponse.isAgree = false;
             addPartnerResponse.MakeC2SData();
             addPartnerResponse.ExecuteC2SEvent(true);
+        }
+
+        private void btn_update_photo_Click(object sender, EventArgs e)
+        {
+            updatePhoto.photoId = numericUpDown_update_photo.Value.ToString();
+            updatePhoto.photo = ImageMGR.Inst.GetImage(new Random().Next(0, 10)).hexData;
+            updatePhoto.MakeC2SData();
+            updatePhoto.ExecuteC2SEvent(true);
+        }
+
+        private void btn_getAllPhoto_Click(object sender, EventArgs e)
+        {
+            this.pic_photo1.Image = null;
+            this.pic_photo2.Image = null;
+            this.pic_photo3.Image = null;
+            this.pic_photo4.Image = null;
+            this.pic_photo5.Image = null;
+            this.pic_photo6.Image = null;
+            this.label_photoId_1.Text = "---";
+            this.label_photoId_2.Text = "---";
+            this.label_photoId_3.Text = "---";
+            this.label_photoId_4.Text = "---";
+            this.label_photoId_5.Text = "---";
+            this.label_photoId_6.Text = "---";
+
+            getAllUserPhoto.MakeC2SData();
+            getAllUserPhoto.ExecuteC2SEvent(true);
+        }
+
+        private void btn_use_photo_Click(object sender, EventArgs e)
+        {
+            setUserPhoto.photoId = (long)numericUpDown_use_photo.Value;
+            
+            setUserPhoto.MakeC2SData();
+            setUserPhoto.ExecuteC2SEvent(true);
         }
     }
 }

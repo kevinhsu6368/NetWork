@@ -6,13 +6,15 @@ using System.Text;
 
 namespace JWNetwork
 {
-    public class UploadPhoto : NetEventBase
+    public class UpdatePhoto : NetEventBase
     {
+        public string photoId;
         public string photo;
 
         public override void MakeC2SData()
         {
             this.c2s_data = new Hashtable();
+            this.c2s_data.Add("photoId", photoId);
             this.c2s_data.Add("photo", photo);
         }
 
@@ -23,19 +25,20 @@ namespace JWNetwork
             switch (err)
             {
                 case 0:
-                    this.S2CResult("UploadPhoto Success : PhotoID=" + datas["photoId"].ToString());
+                    this.S2CResult("updatePhoto Success : PhotoID=" + datas["photoId"].ToString());
                     break;
                 case 1:
-                    this.S2CResult("UploadPhoto Fail !!!");
+                    this.S2CResult("updatePhoto Fail !!!");
                     break;
                 case 500:
-                    this.S2CResult("UploadPhoto  Fail : server error!!!");
+                    this.S2CResult("updatePhoto  Fail : server error!!!");
                     break;
                 default:
-                    this.S2CResult("UploadPhoto Fail : unknow error code (" + err.ToString() + ")");
+                    this.S2CResult("UploupdatePhoto Fail : unknow error code (" + err.ToString() + ")");
                     break;
 
             }
         }
     }
 }
+
