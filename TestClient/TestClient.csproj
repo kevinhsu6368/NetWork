@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NetMSG\Logout.cs" />
     <Compile Include="NetMSG\Partner\addPartner.cs" />
     <Compile Include="NetMSG\Partner\addPartnerRequest.cs" />
     <Compile Include="NetMSG\Partner\addPartnerResponse.cs" />
@@ -55,6 +56,11 @@
     <Compile Include="NetMSG\Photo\SetUserPhoto.cs" />
     <Compile Include="NetMSG\Photo\UpdatePhoto.cs" />
     <Compile Include="NetMSG\Photo\UploadPhoto.cs" />
+    <Compile Include="NetMSG\PreGame\createRoomInfo.cs" />
+    <Compile Include="NetMSG\PreGame\invitedPartnerToRoom.cs" />
+    <Compile Include="NetMSG\PreGame\joinRoom.cs" />
+    <Compile Include="NetMSG\PreGame\joinRoomRequest.cs" />
+    <Compile Include="NetMSG\PreGame\removeRoomInfo.cs" />
     <Compile Include="Tools\ImageMGR.cs" />
     <Compile Include="Tools\MiniJSON.cs" />
     <Compile Include="NetCore\NetCore.cs" />
@@ -96,6 +102,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NetMSG\InGame\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

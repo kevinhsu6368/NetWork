@@ -19,7 +19,7 @@ namespace JWNetwork
         public Socket workSocket = null;
 
         // Size of receive buffer.  
-        public const int BufferSize = 1024 * 1024;
+        public const int BufferSize = 4 * 1024 * 1024;
 
         // Receive buffer.  
         public byte[] buffer = new byte[BufferSize];

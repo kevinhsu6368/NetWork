@@ -43,6 +43,12 @@ namespace TestClient
         UpdatePhoto updatePhoto = new UpdatePhoto();
         GetAllUserPhoto getAllUserPhoto = new GetAllUserPhoto();
         SetUserPhoto setUserPhoto = new SetUserPhoto();
+        CreateRoomInfo createRoomInfo = new CreateRoomInfo();
+        RemoveRoomInfo removeRoomInfo = new RemoveRoomInfo();
+        InvitedPartnerToRoom invitedPartnerToRoom = new InvitedPartnerToRoom();
+        JoinRoomRequest joinRoomRequest = new JoinRoomRequest();
+        JoinRoom joinRoom = new JoinRoom();
+        Logout logout = new Logout();
 
         private void Init()
         {
@@ -57,6 +63,10 @@ namespace TestClient
             //登入
             gameServer.RegRPCEvent(login, "login_C2S", "login_S2C");
             login.onLoginResult = OnLoginResult;
+
+            //登入
+            gameServer.RegRPCEvent(logout, "logout_C2S", "logout_S2C");
+            logout.onS2CResult = s => { this.label_s2c_error.Text = s; };
 
             // 註冊
             gameServer.RegRPCEvent(registered, "registered_C2S", "registered_S2C");
@@ -147,6 +157,94 @@ namespace TestClient
             gameServer.RegRPCEvent(removePartner, "removePartner_C2S", "removePartner_S2C");
             removePartner.onS2CResult = s => { this.label_s2c_error.Text = s; };
 
+
+            /*
+int rs  0 = 成功建立
+array<Long> uids    遊戲室目前玩家uid list EX. [111, 222, 333]
+String roomId  遊戲室編號
+int roomType    1 = 01game,2 = cricket,3 = count up,4 = bull hunter,5 = match
+int gameType    0 = SDB,1 = Online
+int select  依據roomType會有各種不同的對應,EX.01game就是選擇1 = 301.2 = 501.3 = 701...依此類推
+int playerAmount    遊戲人數 1,2,3,4
+long owner   遊戲室擁有者
+*/
+
+
+            // create  room 
+            gameServer.RegRPCEvent(createRoomInfo, "createRoomInfo_C2S", "createRoomInfo_S2C");
+            createRoomInfo.onS2CResult = s => { this.label_s2c_error.Text = s; };
+            createRoomInfo.onS2CResultWithData = (s, data) =>
+            {
+                this.label_s2c_error.Text = s;
+                string roomId = data["roomId"].ToString();
+                this.txtRoomID.Text = roomId;
+                int roomType = int.Parse(data["roomType"].ToString());
+                int gameType = int.Parse(data["gameType"].ToString());
+                int select = int.Parse(data["select"].ToString());
+                int playerAmount = int.Parse(data["playerAmount"].ToString());
+                long owner = int.Parse(data["owner"].ToString());
+                ArrayList uids = (ArrayList) data["uids"];
+
+                this.label_createRoom_select.Text = select.ToString();
+                this.label_createRoom_gameType.Text = gameType.ToString();
+                this.label_createRoom_playerCount.Text = playerAmount.ToString();
+                this.label_createRoom_roomType.Text = roomType.ToString();
+                this.label_Room_UIDS.Text = "";
+                foreach (double uid in uids)
+                {
+                    this.label_Room_UIDS.Text += string.Format("{0},", uid);
+                   
+                }
+            };
+
+            // remove room 
+            gameServer.RegRPCEvent(removeRoomInfo, "removeRoomInfo_C2S", "removeRoomInfo_S2C");
+            removeRoomInfo.onS2CResult = s => { this.label_s2c_error.Text = s; };
+
+            // invited Partner To Room
+            gameServer.RegRPCEvent(invitedPartnerToRoom, "invitedPartnerToRoom_C2S", "invitedPartnerToRoom_S2C");
+            invitedPartnerToRoom.onS2CResult = s => { this.label_s2c_error.Text = s; };
+            
+            // invited Partner To Room
+            gameServer.RegRPCEvent(joinRoomRequest, "joinRoomRequest_C2S", "joinRoomRequest_S2C");
+            joinRoomRequest.onS2CResultWithData = (s,datas) =>
+            {
+                this.label_s2c_error.Text = s;
+
+                long inviter = long.Parse(datas["inviter"].ToString());
+                string nickName = datas["nickName"].ToString();
+                long roomType = long.Parse(datas["roomType"].ToString());
+                long select = long.Parse(datas["select"].ToString());
+                long playAmount = long.Parse(datas["playAmount"].ToString());
+                long gameType = long.Parse(datas["gameType"].ToString());
+                string roomId = datas["roomId"].ToString();
+                string[] roomTypeNames = { "Zero One", "cricket", "count up", "bull hunter", "match", "Practice", "Party" };
+                string roomInfo = roomTypeNames[roomType - 1];
+
+                joinRoom.roomId = roomId;
+                joinRoom.inviterUid = inviter;
+                
+                if (MessageBox.Show( s, "joinRoomRequest", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
+                    // 回應 同意
+                    joinRoom.flag = 0;
+                }
+                else
+                {
+                    // 回應 不同意
+                    joinRoom.flag = 1;
+                }
+
+                joinRoom.MakeC2SData();
+                joinRoom.ExecuteC2SEvent(true);
+            };
+
+            // joinRoom
+            gameServer.RegRPCEvent(joinRoom, "joinRoom_C2S", "joinRoom_S2C");
+            joinRoom.onS2CResult = s =>
+            {
+                this.label_s2c_error.Text = s;
+            };
         }
 
         private void OnS2CResult_getUserPhoto(string s)
@@ -211,6 +309,8 @@ namespace TestClient
             label_connect_status.Text = "Disconnected";
             this.btn_Stop.Enabled = false ;
             this.btn_start.Enabled = true ;
+            this.pic_avartar.Image = null;
+            this.label_s2c_error.Text = "---";
         }
 
         private void OnConnecteTimeout()
@@ -223,6 +323,12 @@ namespace TestClient
             label_connect_status.Text = "Connected";
             this.btn_Stop.Enabled = true;
             this.btn_start.Enabled = false;
+
+            if (isWillLoginNotStart)
+            {
+                isWillLoginNotStart = false;
+                this.btn_login_Click(this,null);
+            }
 
         }
 
@@ -257,13 +363,23 @@ namespace TestClient
             gameServer.Stop();
         }
 
+        private bool isWillLoginNotStart = false;
+
         private void btn_login_Click(object sender, EventArgs e)
         {
+            if (this.btn_start.Enabled == true)
+            {
+                isWillLoginNotStart = true;
+                this.btn_start_Click(this,null);
+                return;
+            }
+
             this.label_login_status.Text = "";
             login.Account = txt_login_name.Text;
             login.Password = txt_login_pwd.Text;
             login.MakeC2SData();
             login.ExecuteC2SEvent(true);
+            
         }
 
         private void btn_regist_Click(object sender, EventArgs e)
@@ -386,6 +502,48 @@ namespace TestClient
             
             setUserPhoto.MakeC2SData();
             setUserPhoto.ExecuteC2SEvent(true);
+        }
+
+        private void btn_create_room_Click(object sender, EventArgs e)
+        {
+            this.txtRoomID.Text = "";
+            this.label_createRoom_select.Text = "...";
+            this.label_createRoom_playerCount.Text = "...";
+            this.label_createRoom_gameType.Text = "...";
+            this.label_createRoom_select.Text = "...";
+
+            createRoomInfo.playerAmount = cbx_createRoom_playerCount.SelectedIndex + 1;
+            createRoomInfo.gameType = cbx_createRoom_gameType.SelectedIndex;
+            createRoomInfo.roomType = cbx_createRoom_roomType.SelectedIndex+1;
+            createRoomInfo.select = cbx_createRoom_select.SelectedIndex+1;
+            createRoomInfo.MakeC2SData();
+            createRoomInfo.ExecuteC2SEvent(true);
+        }
+
+        private void btn_delete_room_Click(object sender, EventArgs e)
+        {
+            removeRoomInfo.roomId = txtRoomID.Text;
+            removeRoomInfo.MakeC2SData();
+            removeRoomInfo.ExecuteC2SEvent(true);
+        }
+
+        private void btn_invite_partner_to_game_Click(object sender, EventArgs e)
+        {
+            invitedPartnerToRoom.roomId = txtRoomID.Text;
+            invitedPartnerToRoom.partnerUid = long.Parse(txt_partnerUID_to_Game.Text);
+            invitedPartnerToRoom.MakeC2SData();
+            invitedPartnerToRoom.ExecuteC2SEvent(true);
+        }
+
+        private void btn_logout_Click(object sender, EventArgs e)
+        {
+            logout.MakeC2SData();
+            logout.ExecuteC2SEvent(true);
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+
         }
     }
 }

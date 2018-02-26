@@ -47,6 +47,28 @@ public class MiniJSON
 	/// <returns>An ArrayList, a Hashtable, a double, a string, null, true, or false</returns>
 	public static object jsonDecode( string json )
 	{
+
+        // check big data
+	    bool hasPhotoHex = false;
+	    string PhotoHex = "";
+        string token = "\"photo\":\"";
+        if (json.Length > 1024*1)
+	    {
+            hasPhotoHex = true;
+	        
+            int iPhoto = json.IndexOf(token);
+	        string temp = json.Substring(iPhoto + token.Length);
+	        int iPhotoEnd = temp.IndexOf("\"");
+	        string jsonAfterPhoto = temp.Substring(iPhotoEnd);
+
+            PhotoHex = temp.Substring(0, iPhotoEnd);
+	        string newJson = json.Substring(0, iPhoto);
+	        newJson += token;
+	        newJson += "PhotoHex"; // <---- 換成這個,可以快速折解 , 但 json 解完後要把原資料放回去
+	        newJson += jsonAfterPhoto;
+	        json = newJson;
+	    }
+
 		// save the string for debug information
 		MiniJSON.lastDecode = json;
 
@@ -57,7 +79,23 @@ public class MiniJSON
 			bool success = true;
 			object value = MiniJSON.parseValue( charArray, ref index, ref success );
 
-			if( success )
+		    if (hasPhotoHex)
+		    {
+                // newJson += "PhotoHex"; // <---- 換成這個,可以快速折解 , 但 json 解完後要把原資料放回去
+		        try
+		        {
+                    Hashtable hDatas = (Hashtable)value;
+                    Hashtable hParams = (Hashtable)hDatas["paramObject"];
+                    hParams["photo"] = PhotoHex;
+                }
+		        catch (Exception eee)
+		        {
+		            
+		        }
+
+		    }
+
+            if ( success )
 				MiniJSON.lastErrorIndex = -1;
 			else
 				MiniJSON.lastErrorIndex = index;

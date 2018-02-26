@@ -25,7 +25,7 @@ namespace JWNetwork
             switch (err)
             {
                 case 0:
-                    this.S2CResult("updatePhoto Success : PhotoID=" + datas["photoId"].ToString());
+                    this.S2CResult("updatePhoto Success : uid =" + datas["uid"].ToString() );
                     break;
                 case 1:
                     this.S2CResult("updatePhoto Fail !!!");
