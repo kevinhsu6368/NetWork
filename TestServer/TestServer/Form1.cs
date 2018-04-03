@@ -26,10 +26,16 @@ namespace TestServer
 
         void Init()
         {
-            server.RegRPCEvent(login, "C2S_Login", login.OnRPCEvent);
+            // start db 
+            SQLMGR.Inst.Start();
+            server.RegRPCEvent(login, "login_C2S", login.OnRPCEvent);
+            server.RegRPCEvent(logout, "logout_C2S", logout.OnRPCEvent);
+
+
         }
 
         ProcLogin login = new ProcLogin();
+        ProcLogout logout = new ProcLogout();
 
         private AsynchronousServer server = new AsynchronousServer();
 

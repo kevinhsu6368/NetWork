@@ -116,6 +116,11 @@ namespace JWNetwork
 
                         Hashtable hData = (Hashtable)hPacket["paramObject"];
 
+                        if(!server.lsRPCEvent.ContainsKey(function))
+                        {
+                            Console.WriteLine(string.Format("MSG-Name ({0}) is fail !!!", function));
+                            return;
+                        }
 
                         NetEvent.OnRPCEvent callBack = server.lsRPCEvent[function];
                         if (callBack != null)
